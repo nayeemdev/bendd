@@ -21,12 +21,12 @@ Exit criteria: you can print a live angle number in Terminal, and you can render
 
 Goal: a single hacky build that visibly bends the screen as the lid closes. Ugly is fine. No settings, no menu bar, no packaging.
 
-- [ ] Wrap the lid angle sensor code into a small class that publishes angle updates (Combine `@Published` or a delegate callback).
-- [ ] Set up an `SCStream` (ScreenCaptureKit) that continuously captures the desktop as a texture, not just a single shot.
-- [ ] Create a full screen, borderless, transparent `NSWindow` at a high window level (`.screenSaver` or similar) that a normal window can't cover.
-- [ ] Render the captured desktop texture in a `CAMetalLayer`/`MTKView` inside that window.
-- [ ] Apply a simple 3D perspective transform (rotate around the bottom edge) driven directly by the live angle value, no easing, no blur yet.
-- [ ] Hardcode Screen Recording permission prompt at launch.
+- [x] Wrap the lid angle sensor code into a small class that publishes angle updates (Combine `@Published` or a delegate callback).
+- [x] Set up an `SCStream` (ScreenCaptureKit) that continuously captures the desktop as a texture, not just a single shot.
+- [x] Create a full screen, borderless, transparent `NSWindow` at a high window level (`.screenSaver` or similar) that a normal window can't cover.
+- [x] Render the captured desktop texture in a `CAMetalLayer`/`MTKView` inside that window.
+- [x] Apply a simple 3D perspective transform (rotate around the bottom edge) driven directly by the live angle value, no easing, no blur yet.
+- [x] Hardcode Screen Recording permission prompt at launch.
 
 Exit criteria: close your laptop lid partway and see the live desktop tilt in real time, however crude. This is your proof of concept demo video moment.
 
