@@ -7,7 +7,11 @@ public final class LidAngleSensor {
     private static let usagePage = 0x0020
     private static let usage = 0x008A
     private static let reportID: CFIndex = 1
-    private static let pollingInterval: TimeInterval = 1.0 / 60.0
+    /// Fast enough for smooth tracking while the bend effect is visible.
+    private static let activePollingInterval: TimeInterval = 1.0 / 60.0
+    /// Coarse enough to keep idle cost near zero while the lid sits open;
+    /// still responsive enough that starting to close the lid is never noticeably late.
+    private static let idlePollingInterval: TimeInterval = 1.0 / 10.0
     private static let smoothingFactor = 0.25
 
     private let manager: IOHIDManager
@@ -66,14 +70,26 @@ public final class LidAngleSensor {
 
     public func start() {
         guard timer == nil else { return }
-        timer = Timer.scheduledTimer(withTimeInterval: Self.pollingInterval, repeats: true) { [weak self] _ in
-            self?.poll()
-        }
+        reschedule(interval: Self.idlePollingInterval)
     }
 
     public func stop() {
         timer?.invalidate()
         timer = nil
+    }
+
+    /// Poll quickly while the effect is active and visible; fall back to a
+    /// coarse rate the rest of the time so idle cost stays near zero.
+    public func setTrackingActive(_ isActive: Bool) {
+        guard timer != nil else { return }
+        reschedule(interval: isActive ? Self.activePollingInterval : Self.idlePollingInterval)
+    }
+
+    private func reschedule(interval: TimeInterval) {
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] _ in
+            self?.poll()
+        }
     }
 
     private func poll() {

@@ -36,7 +36,15 @@ final class OverlayWindowController {
         self.window = window
     }
 
-    func show() {
-        window.orderFrontRegardless()
+    /// A `.screenSaver`-level window suppresses the system menu bar just by
+    /// existing on screen, even when transparent, so it must be fully ordered
+    /// out (not merely paused) whenever the effect isn't active.
+    func setActive(_ isActive: Bool) {
+        metalView.isPaused = !isActive
+        if isActive {
+            window.orderFrontRegardless()
+        } else {
+            window.orderOut(nil)
+        }
     }
 }

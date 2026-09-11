@@ -38,9 +38,9 @@ public final class BendRenderer: NSObject, MTKViewDelegate {
 
     private var blurredTexture: MTLTexture?
 
-    public var lidAngleDegreesProvider: () -> Double = { BendTransform.clearAngleDegrees }
+    public var lidAngleDegreesProvider: () -> Double = { BendConfiguration.default.clearAngleDegrees }
     public var textureProvider: () -> MTLTexture? = { nil }
-    public var style: BendStyle = .silk
+    public var configuration: BendConfiguration = .default
 
     public init(device: MTLDevice) throws {
         self.device = device
@@ -103,19 +103,24 @@ public final class BendRenderer: NSObject, MTKViewDelegate {
         else { return }
 
         let lidAngle = lidAngleDegreesProvider()
-        let bendFraction = Float(BendTransform.bendFraction(forLidAngleDegrees: lidAngle))
-        let styleParameters = style.parameters
+        let configuration = configuration
+        let bendFraction = Float(BendTransform.bendFraction(forLidAngleDegrees: lidAngle, clearAngleDegrees: configuration.clearAngleDegrees))
+        let styleParameters = configuration.style.parameters
 
-        let blurSigma = bendFraction * Self.maxBlurSigma * styleParameters.blurScale
+        let blurSigma = bendFraction * Self.maxBlurSigma * styleParameters.blurScale * Float(configuration.blurAmount)
         let sceneTexture = blurredTexture(for: sourceTexture, sigma: blurSigma, commandBuffer: commandBuffer)
 
         guard let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
 
         let aspectRatio = Float(view.drawableSize.width / view.drawableSize.height)
-        let tilt = BendTransform.tiltDegrees(forLidAngleDegrees: lidAngle)
+        let tilt = BendTransform.tiltDegrees(
+            forLidAngleDegrees: lidAngle,
+            clearAngleDegrees: configuration.clearAngleDegrees,
+            maxTiltDegrees: configuration.perspectiveDepth
+        )
         var mvp = BendTransform.matrix(angleDegrees: tilt, aspectRatio: aspectRatio)
         var uniforms = FragmentUniforms(
-            shadeAmount: bendFraction * Self.maxShadeAmount * styleParameters.shadowScale,
+            shadeAmount: bendFraction * Self.maxShadeAmount * styleParameters.shadowScale * Float(configuration.shadowStrength),
             desaturation: bendFraction * styleParameters.desaturation
         )
 

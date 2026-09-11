@@ -51,12 +51,12 @@ Exit criteria: side by side, the effect is visually comparable to reference demo
 
 Goal: turn the prototype into something that behaves like a real Mac utility.
 
-- [ ] Convert to a proper menu bar only app (`NSStatusItem`, `LSUIElement = true` in Info.plist so it has no Dock icon).
-- [ ] Build a SwiftUI settings popover: live mini preview, sliders for perspective depth / blur amount / shadow strength, style picker (Silk/Shade/Frost), lid clear angle slider.
-- [ ] Add manual drag to preview, let the user drag an on screen angle slider to test the effect without physically closing the lid.
-- [ ] Persist settings with `UserDefaults` or a small Codable settings struct.
-- [ ] Add pause/resume, click the menu bar icon or press Esc to toggle the effect off.
-- [ ] Add "Launch at Login" toggle (`SMAppService` on modern macOS).
+- [x] Convert to a proper menu bar only app (`NSStatusItem`, `LSUIElement = true` in Info.plist so it has no Dock icon). (No Dock icon via `.accessory` activation policy for now; `LSUIElement` in Info.plist lands with the app bundle in Phase 6.)
+- [x] Build a SwiftUI settings popover: live mini preview, sliders for perspective depth / blur amount / shadow strength, style picker (Silk/Shade/Frost), lid clear angle slider.
+- [x] Add manual drag to preview, let the user drag an on screen angle slider to test the effect without physically closing the lid.
+- [x] Persist settings with `UserDefaults` or a small Codable settings struct.
+- [x] Add pause/resume, click the menu bar icon or press Esc to toggle the effect off. (Right-click the icon to toggle instantly; left-click opens settings with the same toggle and Esc closes the popover.)
+- [x] Add "Launch at Login" toggle (`SMAppService` on modern macOS).
 
 Exit criteria: a friend could open the app, tweak sliders, see a live preview, and have it persist across relaunch, without you explaining anything.
 

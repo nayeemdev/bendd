@@ -4,7 +4,7 @@ public struct BendStyleParameters {
     public let desaturation: Float
 }
 
-public enum BendStyle: String, CaseIterable, Sendable {
+public enum BendStyle: String, CaseIterable, Sendable, Codable {
     case silk
     case shade
     case frost

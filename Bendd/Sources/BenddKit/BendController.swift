@@ -21,6 +21,13 @@ public final class BendController {
     /// Called whenever the effect should become visible or hide, on the main thread.
     public var onActiveChange: ((Bool) -> Void)?
 
+    public var configuration: BendConfiguration = .default {
+        didSet {
+            renderer.configuration = configuration
+            handle(angle: sensor.effectiveAngleDegrees)
+        }
+    }
+
     private var isActive = false
 
     public init(device: MTLDevice) throws {
@@ -33,6 +40,7 @@ public final class BendController {
 
         renderer.textureProvider = { [capture] in capture.currentTexture() }
         renderer.lidAngleDegreesProvider = { [sensor] in sensor.effectiveAngleDegrees }
+        renderer.configuration = configuration
 
         sensor.onAngleChange = { [weak self] angle in self?.handle(angle: angle) }
     }
@@ -42,9 +50,10 @@ public final class BendController {
     }
 
     private func handle(angle: Double) {
-        let shouldBeActive = !BendTransform.isClear(lidAngleDegrees: angle)
+        let shouldBeActive = configuration.isEffectEnabled && !BendTransform.isClear(lidAngleDegrees: angle, clearAngleDegrees: configuration.clearAngleDegrees)
         guard shouldBeActive != isActive else { return }
         isActive = shouldBeActive
+        sensor.setTrackingActive(shouldBeActive)
         onActiveChange?(shouldBeActive)
 
         if shouldBeActive {
