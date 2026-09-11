@@ -8,10 +8,10 @@ A step by step roadmap for building Bendd, a free "your desktop bends as the lid
 
 Goal: prove the two riskiest technical pieces work on your hardware before designing anything else.
 
-- [ ] Confirm your Mac is Apple Silicon with a physical lid angle sensor (recent MacBook Air/Pro).
-- [ ] Find and run an open source lid angle sensor reference (e.g. the "LidAngleSensor" project on GitHub) as a standalone command line tool. Confirm you get a live angle value (0 to 180 degrees) while opening/closing the lid.
-- [ ] Write a throwaway script using `CGRequestScreenCaptureAccess()` plus `ScreenCaptureKit` to grab a single screenshot of the desktop.
-- [ ] Write a minimal Metal view that renders a static image with a perspective transform, just to confirm the Metal pipeline compiles and displays.
+- [x] Confirm your Mac is Apple Silicon with a physical lid angle sensor (recent MacBook Air/Pro).
+- [x] Find and run an open source lid angle sensor reference (e.g. the "LidAngleSensor" project on GitHub) as a standalone command line tool. Confirm you get a live angle value (0 to 180 degrees) while opening/closing the lid.
+- [x] Write a throwaway script using `CGRequestScreenCaptureAccess()` plus `ScreenCaptureKit` to grab a single screenshot of the desktop.
+- [x] Write a minimal Metal view that renders a static image with a perspective transform, just to confirm the Metal pipeline compiles and displays.
 
 Exit criteria: you can print a live angle number in Terminal, and you can render a texture in a Metal backed `NSView`. If either fails, stop and debug before proceeding, everything else depends on these two capabilities.
 
