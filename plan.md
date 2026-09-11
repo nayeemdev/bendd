@@ -36,12 +36,12 @@ Exit criteria: close your laptop lid partway and see the live desktop tilt in re
 
 Goal: make the bend actually look good, this is most of the product's perceived value.
 
-- [ ] Add a Gaussian blur pass (Metal Performance Shaders `MPSImageGaussianBlur`) that scales with angle, more blur as the lid closes further.
-- [ ] Add a shading/vignette layer that darkens the tilted plane proportionally to angle, to sell the "closing" depth cue.
-- [ ] Smooth the raw sensor input (basic low pass filter or spring/damping) so the motion doesn't feel jittery.
-- [ ] Implement three visual styles as parameter presets (e.g. Silk = more blur/less shadow, Shade = more shadow/less blur, Frost = both plus slight desaturation).
-- [ ] Add a "clear angle" threshold, above this angle the desktop renders fully normal (no overlay), so there's zero cost when the lid is open.
-- [ ] Profile GPU/CPU usage, capture plus blur running continuously must stay cheap (aim for low single digit percent CPU, minimal GPU wake).
+- [x] Add a Gaussian blur pass (Metal Performance Shaders `MPSImageGaussianBlur`) that scales with angle, more blur as the lid closes further.
+- [x] Add a shading/vignette layer that darkens the tilted plane proportionally to angle, to sell the "closing" depth cue.
+- [x] Smooth the raw sensor input (basic low pass filter or spring/damping) so the motion doesn't feel jittery.
+- [x] Implement three visual styles as parameter presets (e.g. Silk = more blur/less shadow, Shade = more shadow/less blur, Frost = both plus slight desaturation).
+- [x] Add a "clear angle" threshold, above this angle the desktop renders fully normal (no overlay), so there's zero cost when the lid is open.
+- [x] Profile GPU/CPU usage, capture plus blur running continuously must stay cheap (aim for low single digit percent CPU, minimal GPU wake).
 
 Exit criteria: side by side, the effect is visually comparable to reference demo quality. Battery/CPU impact is negligible when the lid is open and idle.
 

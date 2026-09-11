@@ -1,4 +1,5 @@
 import MetalKit
+import MetalPerformanceShaders
 import simd
 
 public enum BendRendererError: Error, CustomStringConvertible {
@@ -19,17 +20,31 @@ public enum BendRendererError: Error, CustomStringConvertible {
     }
 }
 
+private struct FragmentUniforms {
+    var shadeAmount: Float
+    var desaturation: Float
+}
+
 public final class BendRenderer: NSObject, MTKViewDelegate {
+    private static let maxShadeAmount: Float = 0.6
+    private static let maxBlurSigma: Float = 14
+
+    private let device: MTLDevice
     private let commandQueue: MTLCommandQueue
     private let pipelineState: MTLRenderPipelineState
     private let positionBuffer: MTLBuffer
     private let texCoordBuffer: MTLBuffer
     private let samplerState: MTLSamplerState
 
-    public var lidAngleDegreesProvider: () -> Double = { BendTransform.fullyOpenLidAngleDegrees }
+    private var blurredTexture: MTLTexture?
+
+    public var lidAngleDegreesProvider: () -> Double = { BendTransform.clearAngleDegrees }
     public var textureProvider: () -> MTLTexture? = { nil }
+    public var style: BendStyle = .silk
 
     public init(device: MTLDevice) throws {
+        self.device = device
+
         guard let commandQueue = device.makeCommandQueue() else {
             throw BendRendererError.commandQueueCreationFailed
         }
@@ -81,27 +96,64 @@ public final class BendRenderer: NSObject, MTKViewDelegate {
     public func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
 
     public func draw(in view: MTKView) {
-        guard let texture = textureProvider(),
+        guard let sourceTexture = textureProvider(),
               let drawable = view.currentDrawable,
               let renderPassDescriptor = view.currentRenderPassDescriptor,
-              let commandBuffer = commandQueue.makeCommandBuffer(),
-              let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
+              let commandBuffer = commandQueue.makeCommandBuffer()
         else { return }
 
+        let lidAngle = lidAngleDegreesProvider()
+        let bendFraction = Float(BendTransform.bendFraction(forLidAngleDegrees: lidAngle))
+        let styleParameters = style.parameters
+
+        let blurSigma = bendFraction * Self.maxBlurSigma * styleParameters.blurScale
+        let sceneTexture = blurredTexture(for: sourceTexture, sigma: blurSigma, commandBuffer: commandBuffer)
+
+        guard let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
+
         let aspectRatio = Float(view.drawableSize.width / view.drawableSize.height)
-        let tilt = BendTransform.tiltDegrees(forLidAngleDegrees: lidAngleDegreesProvider())
+        let tilt = BendTransform.tiltDegrees(forLidAngleDegrees: lidAngle)
         var mvp = BendTransform.matrix(angleDegrees: tilt, aspectRatio: aspectRatio)
+        var uniforms = FragmentUniforms(
+            shadeAmount: bendFraction * Self.maxShadeAmount * styleParameters.shadowScale,
+            desaturation: bendFraction * styleParameters.desaturation
+        )
 
         encoder.setRenderPipelineState(pipelineState)
         encoder.setVertexBuffer(positionBuffer, offset: 0, index: 0)
         encoder.setVertexBuffer(texCoordBuffer, offset: 0, index: 1)
         encoder.setVertexBytes(&mvp, length: MemoryLayout<float4x4>.size, index: 2)
-        encoder.setFragmentTexture(texture, index: 0)
+        encoder.setFragmentTexture(sceneTexture, index: 0)
         encoder.setFragmentSamplerState(samplerState, index: 0)
+        encoder.setFragmentBytes(&uniforms, length: MemoryLayout<FragmentUniforms>.size, index: 0)
         encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
         encoder.endEncoding()
 
         commandBuffer.present(drawable)
         commandBuffer.commit()
+    }
+
+    /// Blurs `source` into a cached scratch texture when `sigma` calls for it,
+    /// reusing the allocation across frames as long as dimensions match.
+    private func blurredTexture(for source: MTLTexture, sigma: Float, commandBuffer: MTLCommandBuffer) -> MTLTexture {
+        guard sigma > 0.1 else { return source }
+
+        if blurredTexture == nil || blurredTexture?.width != source.width || blurredTexture?.height != source.height {
+            let descriptor = MTLTextureDescriptor.texture2DDescriptor(
+                pixelFormat: source.pixelFormat,
+                width: source.width,
+                height: source.height,
+                mipmapped: false
+            )
+            descriptor.usage = [.shaderRead, .shaderWrite]
+            descriptor.storageMode = .private
+            blurredTexture = device.makeTexture(descriptor: descriptor)
+        }
+
+        guard let destination = blurredTexture else { return source }
+
+        let blur = MPSImageGaussianBlur(device: device, sigma: sigma)
+        blur.encode(commandBuffer: commandBuffer, sourceTexture: source, destinationTexture: destination)
+        return destination
     }
 }

@@ -16,8 +16,18 @@ vertex VertexOut bend_vertex(uint vertexID [[vertex_id]],
     return out;
 }
 
+struct FragmentUniforms {
+    float shadeAmount;
+    float desaturation;
+};
+
 fragment float4 bend_fragment(VertexOut in [[stage_in]],
                                texture2d<float> desktopTexture [[texture(0)]],
-                               sampler textureSampler [[sampler(0)]]) {
-    return desktopTexture.sample(textureSampler, in.texCoord);
+                               sampler textureSampler [[sampler(0)]],
+                               constant FragmentUniforms &uniforms [[buffer(0)]]) {
+    float4 color = desktopTexture.sample(textureSampler, in.texCoord);
+    float luminance = dot(color.rgb, float3(0.299, 0.587, 0.114));
+    float3 desaturated = mix(color.rgb, float3(luminance), uniforms.desaturation);
+    float3 shaded = desaturated * (1.0 - uniforms.shadeAmount);
+    return float4(shaded, color.a);
 }

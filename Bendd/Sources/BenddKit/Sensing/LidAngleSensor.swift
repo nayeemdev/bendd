@@ -8,12 +8,21 @@ public final class LidAngleSensor {
     private static let usage = 0x008A
     private static let reportID: CFIndex = 1
     private static let pollingInterval: TimeInterval = 1.0 / 60.0
+    private static let smoothingFactor = 0.25
 
     private let manager: IOHIDManager
     private let device: IOHIDDevice
     private var timer: Timer?
+    private var hasReading = false
 
     public private(set) var angleDegrees: Double = 0
+
+    /// Overrides the sensor reading, for previewing the effect without moving the lid.
+    public var debugAngleOverride: Double?
+
+    public var effectiveAngleDegrees: Double {
+        debugAngleOverride ?? angleDegrees
+    }
 
     public var onAngleChange: ((Double) -> Void)?
 
@@ -38,7 +47,11 @@ public final class LidAngleSensor {
             return nil
         }
 
-        return LidAngleSensor(manager: manager, device: device)
+        let sensor = LidAngleSensor(manager: manager, device: device)
+        if let raw = ProcessInfo.processInfo.environment["BENDD_DEBUG_ANGLE"], let override = Double(raw) {
+            sensor.debugAngleOverride = override
+        }
+        return sensor
     }
 
     private init(manager: IOHIDManager, device: IOHIDDevice) {
@@ -70,8 +83,13 @@ public final class LidAngleSensor {
         let result = IOHIDDeviceGetReport(device, kIOHIDReportTypeFeature, Self.reportID, &report, &length)
         guard result == kIOReturnSuccess, length >= 3 else { return }
 
-        let raw = UInt16(report[2]) << 8 | UInt16(report[1])
-        angleDegrees = Double(raw)
-        onAngleChange?(angleDegrees)
+        let raw = Double(UInt16(report[2]) << 8 | UInt16(report[1]))
+        if hasReading {
+            angleDegrees = Self.smoothingFactor * raw + (1 - Self.smoothingFactor) * angleDegrees
+        } else {
+            angleDegrees = raw
+            hasReading = true
+        }
+        onAngleChange?(effectiveAngleDegrees)
     }
 }

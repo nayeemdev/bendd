@@ -1,15 +1,24 @@
 import simd
 
 public enum BendTransform {
-    /// Lid angle sensor readings run roughly 0 (closed) to this value (fully open).
-    public static let fullyOpenLidAngleDegrees: Double = 130
+    /// Above this lid angle the desktop renders untouched, at zero cost.
+    public static let clearAngleDegrees: Double = 110
     public static let maxTiltDegrees: Double = 80
 
+    public static func isClear(lidAngleDegrees: Double) -> Bool {
+        lidAngleDegrees >= clearAngleDegrees
+    }
+
+    /// 0 when the lid is at or above the clear angle, ramping to 1 as it closes.
+    public static func bendFraction(forLidAngleDegrees lidAngle: Double) -> Double {
+        let openness = max(0, min(1, lidAngle / clearAngleDegrees))
+        return 1 - openness
+    }
+
     /// Converts a raw lid angle reading into a bend tilt: flat when the lid is
-    /// fully open, maximal as it approaches closed.
+    /// past the clear angle, maximal as it approaches closed.
     public static func tiltDegrees(forLidAngleDegrees lidAngle: Double) -> Float {
-        let openness = max(0, min(1, lidAngle / fullyOpenLidAngleDegrees))
-        return Float((1 - openness) * maxTiltDegrees)
+        Float(bendFraction(forLidAngleDegrees: lidAngle) * maxTiltDegrees)
     }
 
     public static func matrix(angleDegrees: Float, aspectRatio: Float) -> float4x4 {
