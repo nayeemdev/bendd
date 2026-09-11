@@ -282,7 +282,7 @@
       <p class="lede">Bendd reads your Mac's real lid angle sensor and renders your actual desktop tilting shut as you close the lid, blurring and shading into the fold.</p>
 
       <div class="cta-row">
-        <a class="btn btn-primary" href="https://github.com/nayeemdev/bendd/releases/latest" id="downloadBtn">
+        <a class="btn btn-primary js-download" href="https://github.com/nayeemdev/bendd/releases/tag/v0.1.0">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Download for Mac
         </a>
@@ -383,7 +383,7 @@
         <p class="eyebrow">Get Bendd</p>
         <h2>Download the latest build.</h2>
         <p style="color:var(--text-dim); max-width: 48ch; margin: 0 0 6px;">Ships as a DMG straight from GitHub Releases. It's ad-hoc signed, not yet notarized by Apple (that needs a paid Developer Program membership), so the first launch needs one extra step: right-click Bendd.app in Applications and choose <strong style="color:var(--text)">Open</strong>, instead of double-clicking.</p>
-        <a class="btn btn-primary" href="https://github.com/nayeemdev/bendd/releases/latest">
+        <a class="btn btn-primary js-download" href="https://github.com/nayeemdev/bendd/releases/tag/v0.1.0">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Download for Mac
         </a>
@@ -448,18 +448,22 @@
     update();
   })();
 
-  // Best-effort: point the primary CTA at the actual DMG asset if reachable.
+  // Best-effort: point every download CTA at the newest release's actual DMG
+  // asset, pre-release included (GitHub's own "latest" endpoint skips those).
   (function () {
-    fetch('https://api.github.com/repos/nayeemdev/bendd/releases/latest')
+    fetch('https://api.github.com/repos/nayeemdev/bendd/releases')
       .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (data) {
+      .then(function (releases) {
+        var data = releases && releases[0];
         if (!data) return;
         var asset = (data.assets || []).find(function (a) { return /\.dmg$/i.test(a.name); });
         if (asset) {
-          document.getElementById('downloadBtn').href = asset.browser_download_url;
-          var v = document.getElementById('releaseVersion');
-          if (v && data.tag_name) v.textContent = data.tag_name;
+          document.querySelectorAll('.js-download').forEach(function (el) {
+            el.href = asset.browser_download_url;
+          });
         }
+        var v = document.getElementById('releaseVersion');
+        if (v && data.tag_name) v.textContent = data.tag_name;
       })
       .catch(function () {});
   })();
