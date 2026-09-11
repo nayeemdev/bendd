@@ -245,6 +245,18 @@
   }
   .download-panel h2 { margin-bottom: 4px; }
   .download-meta { display: flex; gap: 18px; font-family: var(--font-mono); font-size: 13px; color: var(--text-dim); flex-wrap: wrap; justify-content: center; }
+  .notarize-note {
+    text-align: left; width: 100%; max-width: 46ch;
+    background: var(--glow-soft); border: 1px solid var(--glow);
+    border-radius: 12px; padding: 16px 18px; font-size: 14px; color: var(--text);
+  }
+  .notarize-note strong { color: var(--glow-bright); }
+  .notarize-note code {
+    font-family: var(--font-mono); font-size: 12.5px; background: var(--surface-2);
+    padding: 2px 6px; border-radius: 4px;
+  }
+  .notarize-note p { margin: 8px 0 0; }
+  .notarize-note p:first-child { margin-top: 0; }
 
   footer { border-top: 1px solid var(--line); padding: 40px 0 56px; }
   footer .wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
@@ -282,7 +294,7 @@
       <p class="lede">Bendd reads your Mac's real lid angle sensor and renders your actual desktop tilting shut as you close the lid, blurring and shading into the fold.</p>
 
       <div class="cta-row">
-        <a class="btn btn-primary js-download" href="https://github.com/nayeemdev/bendd/releases/tag/v0.1.0">
+        <a class="btn btn-primary js-download" href="https://github.com/nayeemdev/bendd/releases/latest">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Download for Mac
         </a>
@@ -382,17 +394,21 @@
       <div class="download-panel">
         <p class="eyebrow">Get Bendd</p>
         <h2>Download the latest build.</h2>
-        <p style="color:var(--text-dim); max-width: 48ch; margin: 0 0 6px;">Ships as a DMG straight from GitHub Releases. It's ad-hoc signed, not yet notarized by Apple (that needs a paid Developer Program membership), so the first launch needs one extra step: right-click Bendd.app in Applications and choose <strong style="color:var(--text)">Open</strong>, instead of double-clicking.</p>
-        <a class="btn btn-primary js-download" href="https://github.com/nayeemdev/bendd/releases/tag/v0.1.0">
+        <p style="color:var(--text-dim); max-width: 48ch; margin: 0 0 6px;">Ships as a DMG straight from GitHub Releases, free and open source.</p>
+        <a class="btn btn-primary js-download" href="https://github.com/nayeemdev/bendd/releases/latest">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Download for Mac
         </a>
         <div class="download-meta">
-          <span id="releaseVersion">v0.1.0</span>
+          <span id="releaseVersion">v0.2.0</span>
           <span>&middot;</span>
           <span>Apple Silicon</span>
           <span>&middot;</span>
           <span>macOS 14+</span>
+        </div>
+        <div class="notarize-note">
+          <p><strong>Not notarized by Apple yet.</strong> The build is ad-hoc signed, so on first launch, double-clicking will say it's damaged. Instead, right-click Bendd.app in Applications and choose <strong>Open</strong>, then confirm in the dialog. Only needed once.</p>
+          <p>Still refuses to open? Run <code>xattr -cr /Applications/Bendd.app</code> in Terminal.</p>
         </div>
       </div>
     </div>

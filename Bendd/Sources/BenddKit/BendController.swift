@@ -56,8 +56,7 @@ public final class BendController {
         if shouldBeActive {
             Task { [weak self, capture] in
                 do {
-                    let display = try await DesktopCapture.builtInDisplay()
-                    try await capture.start(display: display)
+                    try await capture.start()
                     self?.onCaptureRecovered?()
                 } catch {
                     self?.onCaptureError?(error)

@@ -1,18 +1,16 @@
 #!/bin/bash
 # Builds Bendd.app: compiles the release binary, assembles a real app bundle
-# with an Info.plist and app icon, and ad-hoc signs it so it runs locally.
+# with an Info.plist and app icon, and signs it.
 #
-# This does not code sign with a Developer ID or notarize. That needs an
-# Apple Developer Program membership and a Developer ID Application
-# certificate tied to a real Apple ID, neither of which a script can supply.
-# Once that's set up, replace the ad-hoc `codesign --sign -` step below with
-# `codesign --sign "Developer ID Application: NAME (TEAMID)"` and follow with
-# `xcrun notarytool submit` + `xcrun stapler staple`.
+# Ad-hoc signs by default, for local use. To sign with a Developer ID ahead
+# of notarization, set BENDD_SIGNING_IDENTITY to the identity's name (see
+# `security find-identity -v -p codesigning`) before running this script,
+# then run Scripts/notarize.sh.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-APP_VERSION="0.1.0"
+APP_VERSION="0.2.0"
 BUILD_NUMBER="1"
 
 DIST_DIR="dist"
@@ -45,7 +43,16 @@ fi
 sed -e "s/APP_VERSION/$APP_VERSION/" -e "s/BUILD_NUMBER/$BUILD_NUMBER/" \
     Scripts/Info.plist.template > "$CONTENTS/Info.plist"
 
-echo "Ad-hoc signing for local use..."
-codesign --force --deep --sign - "$APP_BUNDLE"
+SIGNING_IDENTITY="${BENDD_SIGNING_IDENTITY:--}"
+
+if [ "$SIGNING_IDENTITY" = "-" ]; then
+    echo "Ad-hoc signing for local use..."
+    codesign --force --deep --sign - "$APP_BUNDLE"
+else
+    echo "Signing with Developer ID: $SIGNING_IDENTITY..."
+    codesign --force --deep --options runtime --timestamp \
+        --entitlements Scripts/Bendd.entitlements \
+        --sign "$SIGNING_IDENTITY" "$APP_BUNDLE"
+fi
 
 echo "Done: $APP_BUNDLE"

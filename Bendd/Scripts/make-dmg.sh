@@ -5,7 +5,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-APP_VERSION="0.1.0"
+APP_VERSION="0.2.0"
 DIST_DIR="dist"
 APP_BUNDLE="$DIST_DIR/Bendd.app"
 STAGING_DIR="$DIST_DIR/dmg-staging"

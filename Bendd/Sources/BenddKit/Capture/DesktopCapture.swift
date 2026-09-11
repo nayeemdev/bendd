@@ -32,12 +32,23 @@ public final class DesktopCapture: NSObject {
         textureLock.withLock { latestTexture }
     }
 
-    public func start(display: SCDisplay) async throws {
+    // Excludes Bendd's own process, not just its window: SCShareableContent's
+    // window list doesn't reliably surface a .screenSaver-level window, so
+    // filtering by window ID silently fails and re-captures the bent overlay.
+    public func start() async throws {
         guard CGPreflightScreenCaptureAccess() || CGRequestScreenCaptureAccess() else {
             throw DesktopCaptureError.screenRecordingDenied
         }
 
-        let filter = SCContentFilter(display: display, excludingWindows: [])
+        let content = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: false)
+        guard let display = content.displays.first(where: { CGDisplayIsBuiltin($0.displayID) != 0 }) ?? content.displays.first else {
+            throw DesktopCaptureError.noDisplayFound
+        }
+
+        let ownProcessID = ProcessInfo.processInfo.processIdentifier
+        let excludedApplications = content.applications.filter { $0.processID == ownProcessID }
+
+        let filter = SCContentFilter(display: display, excludingApplications: excludedApplications, exceptingWindows: [])
         let configuration = SCStreamConfiguration()
         configuration.width = display.width * 2
         configuration.height = display.height * 2
@@ -49,14 +60,6 @@ public final class DesktopCapture: NSObject {
         try stream.addStreamOutput(self, type: .screen, sampleHandlerQueue: outputQueue)
         try await stream.startCapture()
         self.stream = stream
-    }
-
-    public static func builtInDisplay() async throws -> SCDisplay {
-        let content = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: false)
-        guard let display = content.displays.first(where: { CGDisplayIsBuiltin($0.displayID) != 0 }) ?? content.displays.first else {
-            throw DesktopCaptureError.noDisplayFound
-        }
-        return display
     }
 
     public func stop() async {

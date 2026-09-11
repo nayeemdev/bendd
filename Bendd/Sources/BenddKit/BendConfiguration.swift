@@ -10,7 +10,7 @@ public struct BendConfiguration: Codable, Equatable, Sendable {
     public var shadowStrength: Double
 
     public static let clearAngleRange: ClosedRange<Double> = 60...130
-    public static let perspectiveDepthRange: ClosedRange<Double> = 20...100
+    public static let perspectiveDepthRange: ClosedRange<Double> = 20...50
     public static let blurAmountRange: ClosedRange<Double> = 0...2
     public static let shadowStrengthRange: ClosedRange<Double> = 0...2
 
@@ -20,7 +20,7 @@ public struct BendConfiguration: Codable, Equatable, Sendable {
         isSoundEnabled: true,
         launchAtLogin: false,
         clearAngleDegrees: 110,
-        perspectiveDepth: 80,
+        perspectiveDepth: 45,
         blurAmount: 1.0,
         shadowStrength: 1.0
     )

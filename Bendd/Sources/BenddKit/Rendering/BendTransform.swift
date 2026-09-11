@@ -14,15 +14,18 @@ public enum BendTransform {
         Float(bendFraction(forLidAngleDegrees: lidAngle, clearAngleDegrees: clearAngleDegrees) * maxTiltDegrees)
     }
 
-    public static func matrix(angleDegrees: Float, aspectRatio: Float) -> float4x4 {
+    private static let fovYRadians: Float = .pi / 4
+
+    public static func matrix(angleDegrees: Float) -> float4x4 {
         let hinge = rotationAroundBottomEdge(angleDegrees: angleDegrees)
-        let projection = perspective(fovYRadians: .pi / 3, aspectRatio: aspectRatio, near: 0.1, far: 10)
-        let view = translation(x: 0, y: 0, z: -3)
+        let projection = perspective(fovYRadians: fovYRadians, near: 0.1, far: 10)
+        let viewDistance = 1 / tan(fovYRadians * 0.5)
+        let view = translation(x: 0, y: 0, z: -viewDistance)
         return projection * view * hinge
     }
 
     private static func rotationAroundBottomEdge(angleDegrees: Float) -> float4x4 {
-        let radians = angleDegrees * .pi / 180
+        let radians = -angleDegrees * .pi / 180
         let moveHingeToOrigin = translation(x: 0, y: 1, z: 0)
         let moveHingeBack = translation(x: 0, y: -1, z: 0)
         return moveHingeBack * rotationX(radians: radians) * moveHingeToOrigin
@@ -48,9 +51,9 @@ public enum BendTransform {
         ])
     }
 
-    private static func perspective(fovYRadians: Float, aspectRatio: Float, near: Float, far: Float) -> float4x4 {
+    private static func perspective(fovYRadians: Float, near: Float, far: Float) -> float4x4 {
         let yScale = 1 / tan(fovYRadians * 0.5)
-        let xScale = yScale / aspectRatio
+        let xScale = yScale
         let zRange = far - near
         let zScale = -(far + near) / zRange
         let wzScale = -2 * far * near / zRange

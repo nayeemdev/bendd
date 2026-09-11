@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Bendd is a free macOS menu bar app that renders the desktop tilting/bending as the built-in display's lid closes, using the lid angle sensor, ScreenCaptureKit, and Metal. `plan.md` is the phased build plan (Phase 0 through Phase 6 are done; Phase 6's Developer ID signing/notarization/release steps are blocked on the maintainer's own Apple Developer Program enrollment). Check it before assuming a feature is unbuilt.
+Bendd is a free macOS menu bar app that renders the desktop tilting/bending as the built-in display's lid closes, using the lid angle sensor, ScreenCaptureKit, and Metal. `plan.md` is the phased build plan (Phase 0 through Phase 6 are done, except Developer ID signing/notarization: Apple restricts creating a Developer ID Application certificate to an account's Account Holder role, and that access isn't available for this project's Apple Developer Program enrollment yet. Releases ship ad-hoc signed until that's resolved). Check it before assuming a feature is unbuilt.
 
 ## Repository layout
 
@@ -18,11 +18,14 @@ All commands run from `Bendd/`.
 ```sh
 swift build -c release          # build
 swift run Bendd                 # run unbundled, from a terminal
-./Scripts/build-app.sh          # assemble dist/Bendd.app (ad-hoc signed) with a real Info.plist and icon
+./Scripts/build-app.sh          # assemble dist/Bendd.app (ad-hoc signed by default) with a real Info.plist and icon
 ./Scripts/make-dmg.sh           # package dist/Bendd.app into dist/Bendd-<version>.dmg (run build-app.sh first)
+./Scripts/notarize.sh           # notarize and staple the app and DMG (run build-app.sh with BENDD_SIGNING_IDENTITY set first)
 ```
 
 There is no test target. There's no linter configured.
+
+Notarized release builds require `BENDD_SIGNING_IDENTITY` set to a Developer ID Application identity (`security find-identity -v -p codesigning`) before running `build-app.sh`, and a `xcrun notarytool store-credentials` keychain profile (default name `bendd-notary`, overridable via `BENDD_NOTARY_PROFILE`) before running `notarize.sh`. Without `BENDD_SIGNING_IDENTITY` set, `build-app.sh` falls back to ad-hoc signing for local testing.
 
 Debug-only environment variables (checked at launch, not part of the shipped UI):
 - `BENDD_DEBUG_ANGLE=<degrees>` — overrides the lid angle sensor reading, for testing the bend without physically moving the lid.

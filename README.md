@@ -21,9 +21,22 @@ It runs quietly in the menu bar, costs effectively nothing while the lid is open
 
 ## Installing
 
-Prebuilt, notarized releases aren't published yet, that needs a paid Apple Developer Program enrollment which hasn't happened. See `plan.md` for the full status.
+> **Not notarized by Apple yet.** Download the DMG from [Releases](https://github.com/nayeemdev/bendd/releases/latest), and on first launch, **right-click Bendd.app and choose Open** instead of double-clicking, or Gatekeeper will refuse to run it and just say it's damaged. See below for why, and for a Terminal alternative.
 
-To build and run from source:
+1. Download the latest `.dmg` from [Releases](https://github.com/nayeemdev/bendd/releases/latest).
+2. Open it and drag Bendd into Applications.
+3. In Applications, **right-click Bendd and choose Open**, then confirm in the dialog that appears. This is only needed the first time.
+4. Grant Screen Recording access when prompted (System Settings > Privacy & Security > Screen Recording).
+
+If right-click Open still refuses to launch it, run this once in Terminal instead:
+
+```sh
+xattr -cr /Applications/Bendd.app
+```
+
+Why the extra step: notarizing a build requires a Developer ID Application certificate, and Apple restricts creating one to an account's Account Holder role specifically (confirmed directly on Apple's own certificate page, not just an Xcode limitation). That access isn't available for this project yet. `Scripts/notarize.sh` in this repo is fully written and ready to use the moment it is; see `plan.md` Phase 6 for the exact status.
+
+To build and run from source instead:
 
 ```sh
 cd Bendd
