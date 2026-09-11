@@ -10,15 +10,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink: #efece4;
     --paper: #efece4;
     --surface: #ffffff;
     --surface-2: #e4e0d5;
     --text: #24262b;
     --text-dim: #5a5d64;
     --hinge: #8a8f98;
-    --glow: #1c8fc2;
-    --glow-bright: #1c8fc2;
+    --glow: #0f7fb0;
+    --glow-bright: #0a6690;
+    --glow-soft: rgba(15,127,176,0.14);
     --line: rgba(36,38,43,0.12);
     --font-display: 'Fraunces', serif;
     --font-body: 'IBM Plex Sans', sans-serif;
@@ -27,7 +27,6 @@
 
   @media (prefers-color-scheme: dark) {
     :root {
-      --ink: #0b0d12;
       --paper: #0b0d12;
       --surface: #12151c;
       --surface-2: #171b23;
@@ -36,6 +35,7 @@
       --hinge: #6b7078;
       --glow: #6fd0ff;
       --glow-bright: #9fe3ff;
+      --glow-soft: rgba(111,208,255,0.10);
       --line: rgba(231,233,237,0.10);
     }
   }
@@ -54,288 +54,169 @@
   }
 
   a { color: inherit; }
+  ::selection { background: var(--glow-soft); }
 
-  .wrap {
-    max-width: 1080px;
-    margin: 0 auto;
-    padding: 0 32px;
-  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
 
   /* ---------- Header ---------- */
 
   header.site {
-    position: sticky;
-    top: 0;
-    z-index: 20;
+    position: sticky; top: 0; z-index: 20;
     background: color-mix(in srgb, var(--paper) 88%, transparent);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--line);
   }
-  header.site .wrap {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 64px;
-  }
-  .wordmark {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 22px;
-    text-decoration: none;
-    letter-spacing: -0.01em;
-  }
+  header.site .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .wordmark { font-family: var(--font-display); font-weight: 600; font-size: 22px; text-decoration: none; letter-spacing: -0.01em; }
   .wordmark em { font-style: italic; color: var(--glow); }
-  .nav-links {
-    display: flex;
-    gap: 28px;
-    font-size: 14px;
-    font-family: var(--font-mono);
-  }
-  .nav-links a {
-    text-decoration: none;
-    color: var(--text-dim);
-    border-bottom: 1px solid transparent;
-    padding-bottom: 2px;
-    transition: color 0.15s, border-color 0.15s;
-  }
+  .nav-links { display: flex; gap: 28px; font-size: 14px; font-family: var(--font-mono); }
+  .nav-links a { text-decoration: none; color: var(--text-dim); border-bottom: 1px solid transparent; padding-bottom: 2px; transition: color 0.15s, border-color 0.15s; }
   .nav-links a:hover, .nav-links a:focus-visible { color: var(--text); border-color: var(--glow); }
 
   /* ---------- Hero ---------- */
 
   .hero {
-    padding: 96px 0 64px;
-    display: grid;
-    grid-template-columns: 1.05fr 0.95fr;
-    gap: 56px;
-    align-items: center;
+    padding: 76px 0 40px;
+    text-align: center;
+    position: relative;
+    overflow: clip;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: -120px; left: 50%;
+    width: 900px; height: 500px;
+    transform: translateX(-50%);
+    background: radial-gradient(closest-side, var(--glow-soft), transparent 70%);
+    pointer-events: none;
   }
   .eyebrow {
-    font-family: var(--font-mono);
-    font-size: 13px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--glow);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 18px;
+    font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--glow); display: inline-flex; align-items: center; gap: 10px; margin-bottom: 22px;
   }
   .eyebrow::before {
-    content: "";
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--glow);
-    box-shadow: 0 0 0 4px color-mix(in srgb, var(--glow) 20%, transparent);
+    content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--glow);
+    box-shadow: 0 0 0 4px var(--glow-soft);
   }
   h1 {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: clamp(40px, 5.2vw, 68px);
-    line-height: 1.02;
-    margin: 0 0 22px;
-    text-wrap: balance;
-    letter-spacing: -0.01em;
+    font-family: var(--font-display); font-weight: 600;
+    font-size: clamp(42px, 6.4vw, 84px);
+    line-height: 1.0; margin: 0 auto 22px; text-wrap: balance; letter-spacing: -0.01em;
+    max-width: 16ch;
   }
   h1 em { font-style: italic; font-weight: 500; color: var(--glow); }
   .lede {
-    font-size: 19px;
-    color: var(--text-dim);
-    max-width: 46ch;
-    margin: 0 0 34px;
+    font-size: 19px; color: var(--text-dim); max-width: 46ch; margin: 0 auto 36px;
   }
-  .cta-row {
-    display: flex;
-    gap: 14px;
-    flex-wrap: wrap;
-  }
+  .cta-row { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-bottom: 14px; }
   .btn {
-    font-family: var(--font-mono);
-    font-size: 14px;
-    text-decoration: none;
-    padding: 13px 22px;
-    border-radius: 8px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: transform 0.15s, background 0.15s, border-color 0.15s;
+    font-family: var(--font-mono); font-size: 14px; text-decoration: none;
+    padding: 14px 24px; border-radius: 9px; display: inline-flex; align-items: center; gap: 9px;
+    transition: transform 0.15s, background 0.15s, border-color 0.15s, box-shadow 0.15s;
   }
   .btn:hover { transform: translateY(-1px); }
-  .btn-primary {
-    background: var(--text);
-    color: var(--paper);
-  }
-  .btn-primary:hover { background: var(--glow); color: #04121a; }
-  .btn-ghost {
-    border: 1px solid var(--line);
-    color: var(--text);
-  }
+  .btn-primary { background: var(--glow); color: #04121a; box-shadow: 0 8px 24px -8px var(--glow-soft); }
+  .btn-primary:hover { background: var(--glow-bright); }
+  .btn-ghost { border: 1px solid var(--line); color: var(--text); }
   .btn-ghost:hover { border-color: var(--glow); }
+  .btn svg { width: 15px; height: 15px; }
 
-  .hero-stats {
-    display: flex;
-    gap: 28px;
-    margin-top: 40px;
-    font-family: var(--font-mono);
-    font-size: 13px;
-    color: var(--text-dim);
+  .fine-print {
+    font-family: var(--font-mono); font-size: 12.5px; color: var(--text-dim); margin: 0 0 56px;
   }
-  .hero-stats b {
-    display: block;
-    font-family: var(--font-display);
-    font-size: 26px;
-    font-weight: 600;
-    color: var(--text);
-    font-variant-numeric: tabular-nums;
-  }
+  .fine-print a { color: var(--text-dim); text-decoration: underline; text-underline-offset: 2px; }
+  .fine-print a:hover { color: var(--glow); }
 
-  /* ---------- The hinge demo ---------- */
+  /* ---------- The hinge demo (hero centerpiece) ---------- */
 
   .stage {
-    perspective: 1400px;
-    perspective-origin: 50% 15%;
-    height: 420px;
+    perspective: 1800px;
+    perspective-origin: 50% 8%;
+    height: 480px;
     display: flex;
     align-items: flex-end;
     justify-content: center;
     position: relative;
+    max-width: 720px;
+    margin: 0 auto;
   }
   .readout {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 4px; left: 50%;
+    transform: translateX(-50%);
     font-family: var(--font-mono);
     font-size: 13px;
     color: var(--text-dim);
-    text-align: right;
-    line-height: 1.5;
+    text-align: center;
+    line-height: 1.4;
+    z-index: 2;
   }
   .readout .deg {
-    font-size: 34px;
-    color: var(--glow);
-    font-weight: 500;
-    font-variant-numeric: tabular-nums;
-    display: block;
+    font-size: 40px; color: var(--glow); font-weight: 500;
+    font-variant-numeric: tabular-nums; display: block;
   }
-  .laptop {
-    width: 88%;
-    max-width: 380px;
-  }
+  .laptop { width: 92%; max-width: 560px; }
   .base {
-    height: 14px;
-    background: linear-gradient(180deg, var(--hinge), color-mix(in srgb, var(--hinge) 60%, var(--paper)));
-    border-radius: 3px 3px 8px 8px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    height: 16px;
+    background: linear-gradient(180deg, var(--hinge), color-mix(in srgb, var(--hinge) 55%, var(--paper)));
+    border-radius: 3px 3px 9px 9px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.22);
   }
   .screen {
     transform-origin: bottom center;
     transform: rotateX(38deg);
-    border-radius: 10px 10px 3px 3px;
-    aspect-ratio: 16 / 10.5;
-    background:
-      linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0) 30%),
-      var(--surface);
+    border-radius: 12px 12px 3px 3px;
+    aspect-ratio: 16 / 10.2;
+    background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0) 30%), var(--surface);
     border: 1px solid var(--line);
     border-bottom: none;
-    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.35);
+    box-shadow: 0 40px 80px -24px rgba(0,0,0,0.4);
     overflow: hidden;
     position: relative;
     will-change: transform, filter;
   }
-  .screen .bezel {
-    position: absolute;
-    inset: 0;
-    padding: 14px;
-  }
-  .screen .dots { display: flex; gap: 6px; margin-bottom: 10px; }
-  .screen .dots span { width: 7px; height: 7px; border-radius: 50%; background: var(--line); }
-  .screen .bars { display: grid; gap: 8px; }
-  .screen .bars i {
-    display: block;
-    height: 10px;
-    border-radius: 3px;
-    background: color-mix(in srgb, var(--glow) 30%, var(--surface-2));
-  }
+  .screen .bezel { position: absolute; inset: 0; padding: 20px 22px; }
+  .screen .dots { display: flex; gap: 7px; margin-bottom: 16px; }
+  .screen .dots span { width: 9px; height: 9px; border-radius: 50%; background: var(--line); }
+  .screen .bars { display: grid; gap: 11px; }
+  .screen .bars i { display: block; height: 13px; border-radius: 4px; background: color-mix(in srgb, var(--glow) 28%, var(--surface-2)); }
   .screen .bars i:nth-child(1) { width: 78%; }
   .screen .bars i:nth-child(2) { width: 52%; }
   .screen .bars i:nth-child(3) { width: 64%; }
+  .screen .bars i:nth-child(4) { width: 40%; }
 
   @media (prefers-reduced-motion: no-preference) {
     .screen { transition: transform 0.05s linear, filter 0.05s linear; }
   }
 
+  .scroll-hint {
+    font-family: var(--font-mono); font-size: 12px; color: var(--text-dim);
+    text-align: center; margin-top: 8px; letter-spacing: 0.04em;
+  }
+
   /* ---------- Sections ---------- */
 
-  section { padding: 72px 0; border-top: 1px solid var(--line); }
-
+  section { padding: 76px 0; border-top: 1px solid var(--line); }
   .section-head { max-width: 60ch; margin-bottom: 44px; }
   .section-head .eyebrow { margin-bottom: 10px; }
-  h2 {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: clamp(28px, 3.4vw, 38px);
-    margin: 0 0 14px;
-    text-wrap: balance;
-  }
+  h2 { font-family: var(--font-display); font-weight: 600; font-size: clamp(28px, 3.4vw, 38px); margin: 0 0 14px; text-wrap: balance; }
   .section-head p { color: var(--text-dim); margin: 0; font-size: 16.5px; }
 
-  /* how it works */
-  .steps {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: var(--line);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    overflow: hidden;
-  }
-  .step {
-    background: var(--surface);
-    padding: 30px 28px;
-  }
-  .step .tag {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--glow);
-    letter-spacing: 0.06em;
-  }
-  .step h3 {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 21px;
-    margin: 10px 0 8px;
-  }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .step { background: var(--surface); padding: 30px 28px; }
+  .step .tag { font-family: var(--font-mono); font-size: 12px; color: var(--glow); letter-spacing: 0.06em; }
+  .step h3 { font-family: var(--font-display); font-weight: 600; font-size: 21px; margin: 10px 0 8px; }
   .step p { color: var(--text-dim); font-size: 15px; margin: 0; }
 
-  /* styles showcase */
-  .styles-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 22px;
-  }
-  .style-card {
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 22px;
-    perspective: 900px;
-  }
+  .styles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .style-card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 22px; perspective: 900px; }
   .style-card .swatch {
-    aspect-ratio: 16/10.5;
-    border-radius: 8px;
-    background: var(--surface-2);
-    transform: rotateX(22deg);
-    transform-origin: bottom center;
+    aspect-ratio: 16/10.5; border-radius: 8px; background: var(--surface-2);
+    transform: rotateX(22deg); transform-origin: bottom center;
     transition: transform 0.4s cubic-bezier(.2,.8,.2,1), filter 0.4s;
-    margin-bottom: 18px;
-    position: relative;
-    overflow: hidden;
+    margin-bottom: 18px; position: relative; overflow: hidden;
   }
-  .style-card .swatch::after {
-    content: "";
-    position: absolute; inset: 0;
-    background: linear-gradient(135deg, color-mix(in srgb, var(--glow) 35%, transparent), transparent 60%);
-  }
+  .style-card .swatch::after { content: ""; position: absolute; inset: 0; background: linear-gradient(135deg, var(--glow-soft), transparent 60%); }
   .style-card:hover .swatch { transform: rotateX(46deg); }
   .swatch.silk { filter: blur(0.3px) brightness(1); }
   .style-card:hover .swatch.silk { filter: blur(2.5px) brightness(0.92); }
@@ -343,83 +224,39 @@
   .style-card:hover .swatch.shade { filter: blur(1px) brightness(0.55); }
   .swatch.frost { filter: saturate(0.9); }
   .style-card:hover .swatch.frost { filter: blur(2px) saturate(0.25) brightness(0.7); }
-  .style-card h3 {
-    font-family: var(--font-display);
-    font-size: 19px;
-    font-weight: 600;
-    margin: 0 0 6px;
-  }
+  .style-card h3 { font-family: var(--font-display); font-size: 19px; font-weight: 600; margin: 0 0 6px; }
   .style-card p { color: var(--text-dim); font-size: 14.5px; margin: 0; }
 
-  /* spec sheet */
-  .spec {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0 40px;
-    border-top: 1px solid var(--line);
-  }
-  .spec dl {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 14px 20px;
-    margin: 0;
-    padding: 22px 0;
-    border-bottom: 1px solid var(--line);
-  }
+  .spec { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 40px; border-top: 1px solid var(--line); }
+  .spec dl { display: grid; grid-template-columns: 1fr auto; gap: 14px 20px; margin: 0; padding: 22px 0; border-bottom: 1px solid var(--line); }
   .spec dt { color: var(--text-dim); font-size: 14.5px; }
-  .spec dd {
-    margin: 0;
-    font-family: var(--font-mono);
-    font-size: 14.5px;
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-  }
+  .spec dd { margin: 0; font-family: var(--font-mono); font-size: 14.5px; text-align: right; font-variant-numeric: tabular-nums; }
 
-  /* privacy strip */
-  .privacy {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 24px 28px;
-  }
-  .privacy .icon {
-    font-family: var(--font-mono);
-    font-size: 22px;
-    color: var(--glow);
-    flex: none;
-  }
+  .privacy { display: flex; align-items: center; gap: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 24px 28px; }
+  .privacy .icon { font-family: var(--font-mono); font-size: 22px; color: var(--glow); flex: none; }
   .privacy p { margin: 0; color: var(--text-dim); font-size: 15px; }
   .privacy strong { color: var(--text); }
 
-  footer {
-    border-top: 1px solid var(--line);
-    padding: 40px 0 56px;
+  /* download section */
+  .download-panel {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
+    padding: 48px; text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 18px;
   }
-  footer .wrap {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
+  .download-panel h2 { margin-bottom: 4px; }
+  .download-meta { display: flex; gap: 18px; font-family: var(--font-mono); font-size: 13px; color: var(--text-dim); flex-wrap: wrap; justify-content: center; }
+
+  footer { border-top: 1px solid var(--line); padding: 40px 0 56px; }
+  footer .wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
   footer .wordmark { font-size: 17px; }
-  .foot-links {
-    display: flex;
-    gap: 22px;
-    font-family: var(--font-mono);
-    font-size: 13px;
-    color: var(--text-dim);
-  }
+  .foot-links { display: flex; gap: 22px; font-family: var(--font-mono); font-size: 13px; color: var(--text-dim); }
   .foot-links a { text-decoration: none; }
   .foot-links a:hover { color: var(--glow); }
 
   @media (max-width: 860px) {
-    .hero { grid-template-columns: 1fr; padding-top: 56px; }
     .steps, .styles-grid, .spec { grid-template-columns: 1fr; }
-    .stage { height: 320px; }
+    .stage { height: 340px; }
+    .download-panel { padding: 32px 20px; }
   }
 </style>
 </head>
@@ -431,29 +268,28 @@
     <nav class="nav-links">
       <a href="#how">How it works</a>
       <a href="#styles">Styles</a>
-      <a href="#requirements">Requirements</a>
+      <a href="#download">Download</a>
       <a href="https://github.com/nayeemdev/bendd">GitHub</a>
     </nav>
   </div>
 </header>
 
 <main id="top">
-  <section class="hero" style="border-top:none; padding-top: 96px;">
-    <div class="wrap" style="display:contents;">
-      <div>
-        <p class="eyebrow">Free &middot; Open source &middot; Menu bar</p>
-        <h1>Your desktop, on a <em>hinge</em>.</h1>
-        <p class="lede">Bendd reads your Mac's real lid angle sensor and renders your actual desktop tilting shut as you close the lid, blurring and shading into the fold. Free, native, and it costs nothing while the lid is open.</p>
-        <div class="cta-row">
-          <a class="btn btn-primary" href="https://github.com/nayeemdev/bendd">Get it on GitHub &rarr;</a>
-          <a class="btn btn-ghost" href="#how">See how it works</a>
-        </div>
-        <div class="hero-stats">
-          <div><b>0.4%</b>idle CPU</div>
-          <div><b>3</b>visual styles</div>
-          <div><b>MIT</b>licensed</div>
-        </div>
+  <section class="hero" style="border-top:none;">
+    <div class="wrap">
+      <p class="eyebrow">Free &middot; Open source &middot; Menu bar</p>
+      <h1>Your desktop, on a <em>hinge</em>.</h1>
+      <p class="lede">Bendd reads your Mac's real lid angle sensor and renders your actual desktop tilting shut as you close the lid, blurring and shading into the fold.</p>
+
+      <div class="cta-row">
+        <a class="btn btn-primary" href="https://github.com/nayeemdev/bendd/releases/latest" id="downloadBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download for Mac
+        </a>
+        <a class="btn btn-ghost" href="https://github.com/nayeemdev/bendd">View source</a>
       </div>
+      <p class="fine-print">Apple Silicon &middot; macOS 14+ &middot; not notarized yet, see <a href="#download">install notes</a></p>
+
       <div class="stage" id="stage">
         <div class="readout">
           lid angle
@@ -463,12 +299,13 @@
           <div class="screen" id="screen">
             <div class="bezel">
               <div class="dots"><span></span><span></span><span></span></div>
-              <div class="bars"><i></i><i></i><i></i></div>
+              <div class="bars"><i></i><i></i><i></i><i></i></div>
             </div>
           </div>
           <div class="base"></div>
         </div>
       </div>
+      <p class="scroll-hint">&darr; scroll, the hinge follows you</p>
     </div>
   </section>
 
@@ -483,7 +320,7 @@
         <div class="step">
           <p class="tag">01 &middot; SENSE</p>
           <h3>Read the hinge</h3>
-          <p>Polls the Mac's lid angle sensor, the same one behind the display auto-dim, at up to 60Hz while the lid is moving.</p>
+          <p>Polls the Mac's lid angle sensor, the same one behind display auto-dim, at up to 60Hz while the lid is moving.</p>
         </div>
         <div class="step">
           <p class="tag">02 &middot; CAPTURE</p>
@@ -507,21 +344,9 @@
         <p>Hover a card. Each style is a different balance of blur, shadow, and color.</p>
       </div>
       <div class="styles-grid">
-        <div class="style-card">
-          <div class="swatch silk"></div>
-          <h3>Silk</h3>
-          <p>Soft focus, light shadow. The fold feels gentle.</p>
-        </div>
-        <div class="style-card">
-          <div class="swatch shade"></div>
-          <h3>Shade</h3>
-          <p>Sharper edges, deep shadow. The fold feels heavy.</p>
-        </div>
-        <div class="style-card">
-          <div class="swatch frost"></div>
-          <h3>Frost</h3>
-          <p>Blur, shadow, and a wash of desaturation together.</p>
-        </div>
+        <div class="style-card"><div class="swatch silk"></div><h3>Silk</h3><p>Soft focus, light shadow. The fold feels gentle.</p></div>
+        <div class="style-card"><div class="swatch shade"></div><h3>Shade</h3><p>Sharper edges, deep shadow. The fold feels heavy.</p></div>
+        <div class="style-card"><div class="swatch frost"></div><h3>Frost</h3><p>Blur, shadow, and a wash of desaturation together.</p></div>
       </div>
     </div>
   </section>
@@ -551,6 +376,27 @@
       </div>
     </div>
   </section>
+
+  <section id="download">
+    <div class="wrap">
+      <div class="download-panel">
+        <p class="eyebrow">Get Bendd</p>
+        <h2>Download the latest build.</h2>
+        <p style="color:var(--text-dim); max-width: 48ch; margin: 0 0 6px;">Ships as a DMG straight from GitHub Releases. It's ad-hoc signed, not yet notarized by Apple (that needs a paid Developer Program membership), so the first launch needs one extra step: right-click Bendd.app in Applications and choose <strong style="color:var(--text)">Open</strong>, instead of double-clicking.</p>
+        <a class="btn btn-primary" href="https://github.com/nayeemdev/bendd/releases/latest">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download for Mac
+        </a>
+        <div class="download-meta">
+          <span id="releaseVersion">v0.1.0</span>
+          <span>&middot;</span>
+          <span>Apple Silicon</span>
+          <span>&middot;</span>
+          <span>macOS 14+</span>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer>
@@ -571,8 +417,8 @@
     var stage = document.getElementById('stage');
     var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    var OPEN_DEG = 38;   // resting tilt, "lid mostly open"
-    var CLOSED_DEG = 84; // near flat against base, "lid mostly closed"
+    var OPEN_DEG = 38;
+    var CLOSED_DEG = 84;
 
     function render(progress) {
       var p = Math.max(0, Math.min(1, progress));
@@ -585,18 +431,14 @@
       readout.textContent = angle + '°';
     }
 
-    if (reduceMotion) {
-      render(0.15);
-      return;
-    }
+    if (reduceMotion) { render(0.15); return; }
 
     function update() {
       var rect = stage.getBoundingClientRect();
       var vh = window.innerHeight;
-      // progress 0 when stage center is at 65% down the viewport, 1 when it reaches 25%
       var center = rect.top + rect.height / 2;
-      var start = vh * 0.75;
-      var end = vh * 0.2;
+      var start = vh * 0.95;
+      var end = vh * 0.3;
       var progress = (start - center) / (start - end);
       render(progress);
     }
@@ -604,6 +446,22 @@
     window.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
     update();
+  })();
+
+  // Best-effort: point the primary CTA at the actual DMG asset if reachable.
+  (function () {
+    fetch('https://api.github.com/repos/nayeemdev/bendd/releases/latest')
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) {
+        if (!data) return;
+        var asset = (data.assets || []).find(function (a) { return /\.dmg$/i.test(a.name); });
+        if (asset) {
+          document.getElementById('downloadBtn').href = asset.browser_download_url;
+          var v = document.getElementById('releaseVersion');
+          if (v && data.tag_name) v.textContent = data.tag_name;
+        }
+      })
+      .catch(function () {});
   })();
 </script>
 
