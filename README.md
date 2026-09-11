@@ -1,6 +1,6 @@
 # Bendd
 
-Bendd is a free, open source macOS menu bar app that makes your desktop visually bend and fold away as you close your laptop lid, like the screen itself is tilting shut.
+Bendd is a free, open source macOS menu bar app that makes your desktop visually bend and fold away as you close your laptop lid, like the screen itself is tilting shut. The look, fading to black as the screen goes edge-on rather than just tilting away, was inspired by the iPhone Duo fold concept animations that have been circulating online.
 
 It runs quietly in the menu bar, costs effectively nothing while the lid is open, and turns on only while the lid is actually closing.
 
