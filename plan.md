@@ -95,12 +95,12 @@ Exit criteria: it feels like a finished indie app, not a script someone ran from
 
 Goal: get a distributable, trustworthy build that anyone can download and run for free.
 
-- [ ] Enroll in the Apple Developer Program if needed (still required for Developer ID signing/notarization, even for free apps).
-- [ ] Set up code signing with a Developer ID Application certificate.
-- [ ] Set up notarization (`xcrun notarytool submit` plus stapling) so Gatekeeper doesn't block first launch.
-- [ ] Build a DMG installer (drag to Applications style), tools like `create-dmg` simplify this.
-- [ ] Publish the DMG on GitHub Releases or a simple static page, no checkout, no license keys.
-- [ ] Test the full install flow on a clean Mac/user account: download DMG, drag to Applications, launch, grant permission, it works.
+- [ ] Enroll in the Apple Developer Program if needed (still required for Developer ID signing/notarization, even for free apps). (Blocked on you: this needs your own Apple ID, payment, and agreement acceptance, not something that can be scripted or done on your behalf.)
+- [ ] Set up code signing with a Developer ID Application certificate. (`Scripts/build-app.sh` currently ad-hoc signs for local use; once you have a Developer ID certificate, swap in `codesign --sign "Developer ID Application: NAME (TEAMID)"` where the script says so.)
+- [ ] Set up notarization (`xcrun notarytool submit` plus stapling) so Gatekeeper doesn't block first launch. (Needs the Developer ID cert above first.)
+- [x] Build a DMG installer (drag to Applications style), tools like `create-dmg` simplify this. (`Scripts/build-app.sh` assembles the signed `.app` with a real Info.plist and generated icon; `Scripts/make-dmg.sh` packages it into a drag-to-Applications DMG using the built-in `hdiutil`, no extra tools needed. Both tested and working on this machine.)
+- [ ] Publish the DMG on GitHub Releases or a simple static page, no checkout, no license keys. (Deliberately held off: an ad-hoc-signed, unnotarized DMG would just hit a Gatekeeper wall for anyone else who downloads it. Worth publishing once notarization is in place.)
+- [ ] Test the full install flow on a clean Mac/user account: download DMG, drag to Applications, launch, grant permission, it works. (Verified DMG mounting, app bundle launch, onboarding, and the live effect all work on this machine; a truly clean separate Mac/account hasn't been tried.)
 
 Exit criteria: a stranger can download the DMG and get from zero to working app with no terminal commands, no Xcode, and no payment.
 
