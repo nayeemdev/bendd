@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Bendd — bend your desktop as the lid closes</title>
+<title>Bendd — bend your desktop as the lid closes, like the iPhone Duo fold concept</title>
 <meta name="description" content="Bendd is a free, open source Mac menu bar app that makes your desktop visually bend as you close the lid, inspired by the iPhone Duo fold concept." />
 <meta name="robots" content="index, follow" />
 <link rel="canonical" href="https://blendd.nayeem.me/" />
@@ -13,10 +13,18 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png" />
 <meta name="theme-color" content="#efece4" media="(prefers-color-scheme: light)" />
 <meta name="theme-color" content="#0b0d12" media="(prefers-color-scheme: dark)" />
+<script>
+  (function () {
+    var stored = localStorage.getItem('bendd-theme');
+    if (stored === 'light' || stored === 'dark') {
+      document.documentElement.setAttribute('data-theme', stored);
+    }
+  })();
+</script>
 
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Bendd" />
-<meta property="og:title" content="Bendd — bend your desktop as the lid closes" />
+<meta property="og:title" content="Bendd — bend your desktop as the lid closes, like the iPhone Duo fold concept" />
 <meta property="og:description" content="A free, open source Mac menu bar app that makes your desktop visually bend as you close the lid, inspired by the iPhone Duo fold concept." />
 <meta property="og:url" content="https://blendd.nayeem.me/" />
 <meta property="og:image" content="https://blendd.nayeem.me/og-image.png" />
@@ -24,7 +32,7 @@
 <meta property="og:image:height" content="630" />
 
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Bendd — bend your desktop as the lid closes" />
+<meta name="twitter:title" content="Bendd — bend your desktop as the lid closes, like the iPhone Duo fold concept" />
 <meta name="twitter:description" content="A free, open source Mac menu bar app that makes your desktop visually bend as you close the lid, inspired by the iPhone Duo fold concept." />
 <meta name="twitter:image" content="https://blendd.nayeem.me/og-image.png" />
 
@@ -49,7 +57,7 @@
   }
 
   @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not([data-theme="light"]) {
       --paper: #0b0d12;
       --surface: #12151c;
       --surface-2: #171b23;
@@ -61,6 +69,19 @@
       --glow-soft: rgba(111,208,255,0.10);
       --line: rgba(231,233,237,0.10);
     }
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #0b0d12;
+    --surface: #12151c;
+    --surface-2: #171b23;
+    --text: #e7e9ed;
+    --text-dim: #8b909b;
+    --hinge: #6b7078;
+    --glow: #6fd0ff;
+    --glow-bright: #9fe3ff;
+    --glow-soft: rgba(111,208,255,0.10);
+    --line: rgba(231,233,237,0.10);
   }
 
   * { box-sizing: border-box; }
@@ -90,11 +111,33 @@
     border-bottom: 1px solid var(--line);
   }
   header.site .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
-  .wordmark { font-family: var(--font-display); font-weight: 600; font-size: 22px; text-decoration: none; letter-spacing: -0.01em; }
+  .wordmark { display: inline-flex; align-items: center; gap: 7px; font-family: var(--font-display); font-weight: 600; font-size: 22px; text-decoration: none; letter-spacing: -0.01em; }
   .wordmark em { font-style: italic; color: var(--glow); }
-  .nav-links { display: flex; gap: 28px; font-size: 14px; font-family: var(--font-mono); }
+  .wordmark img { width: 26px; height: 26px; border-radius: 7px; display: block; }
+  footer .wordmark img { width: 20px; height: 20px; border-radius: 5.5px; }
+  .nav-links { display: flex; align-items: center; gap: 28px; font-size: 14px; font-family: var(--font-mono); }
   .nav-links a { text-decoration: none; color: var(--text-dim); border-bottom: 1px solid transparent; padding-bottom: 2px; transition: color 0.15s, border-color 0.15s; }
   .nav-links a:hover, .nav-links a:focus-visible { color: var(--text); border-color: var(--glow); }
+
+  .theme-toggle {
+    display: flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; padding: 0;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+    color: var(--text-dim); cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .theme-toggle:hover, .theme-toggle:focus-visible { color: var(--glow); border-color: var(--glow); }
+  .theme-toggle svg { width: 16px; height: 16px; }
+  .theme-toggle .icon-moon { display: block; }
+  .theme-toggle .icon-sun { display: none; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .theme-toggle .icon-moon { display: none; }
+    :root:not([data-theme="light"]) .theme-toggle .icon-sun { display: block; }
+  }
+  :root[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+  :root[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+  :root[data-theme="light"] .theme-toggle .icon-moon { display: block; }
+  :root[data-theme="light"] .theme-toggle .icon-sun { display: none; }
 
   /* ---------- Hero ---------- */
 
@@ -153,68 +196,52 @@
   /* ---------- The hinge demo (hero centerpiece) ---------- */
 
   .stage {
-    perspective: 1800px;
-    perspective-origin: 50% 8%;
-    height: 480px;
     display: flex;
-    align-items: flex-end;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     position: relative;
     max-width: 720px;
     margin: 0 auto;
   }
   .readout {
-    position: absolute;
-    top: 4px; left: 50%;
-    transform: translateX(-50%);
     font-family: var(--font-mono);
     font-size: 13px;
     color: var(--text-dim);
     text-align: center;
     line-height: 1.4;
-    z-index: 2;
+    margin-bottom: 14px;
   }
   .readout .deg {
     font-size: 40px; color: var(--glow); font-weight: 500;
     font-variant-numeric: tabular-nums; display: block;
   }
   .laptop { width: 92%; max-width: 560px; }
+  .screen {
+    aspect-ratio: 1100 / 715;
+    border-radius: 12px 12px 3px 3px;
+    background: #000;
+    border: 1px solid var(--line);
+    border-bottom: none;
+    box-shadow: 0 40px 80px -24px rgba(0,0,0,0.4);
+    overflow: hidden;
+    position: relative;
+  }
+  .screen img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
   .base {
     height: 16px;
     background: linear-gradient(180deg, var(--hinge), color-mix(in srgb, var(--hinge) 55%, var(--paper)));
     border-radius: 3px 3px 9px 9px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.22);
   }
-  .screen {
-    transform-origin: bottom center;
-    transform: rotateX(38deg);
-    border-radius: 12px 12px 3px 3px;
-    aspect-ratio: 16 / 10.2;
-    background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0) 30%), var(--surface);
-    border: 1px solid var(--line);
-    border-bottom: none;
-    box-shadow: 0 40px 80px -24px rgba(0,0,0,0.4);
-    overflow: hidden;
-    position: relative;
-    will-change: transform, filter;
-  }
-  .screen .bezel { position: absolute; inset: 0; padding: 20px 22px; }
-  .screen .dots { display: flex; gap: 7px; margin-bottom: 16px; }
-  .screen .dots span { width: 9px; height: 9px; border-radius: 50%; background: var(--line); }
-  .screen .bars { display: grid; gap: 11px; }
-  .screen .bars i { display: block; height: 13px; border-radius: 4px; background: color-mix(in srgb, var(--glow) 28%, var(--surface-2)); }
-  .screen .bars i:nth-child(1) { width: 78%; }
-  .screen .bars i:nth-child(2) { width: 52%; }
-  .screen .bars i:nth-child(3) { width: 64%; }
-  .screen .bars i:nth-child(4) { width: 40%; }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .screen { transition: transform 0.05s linear, filter 0.05s linear; }
-  }
 
   .scroll-hint {
     font-family: var(--font-mono); font-size: 12px; color: var(--text-dim);
-    text-align: center; margin-top: 8px; letter-spacing: 0.04em;
+    text-align: center; margin-top: 14px; letter-spacing: 0.04em;
   }
 
   /* ---------- Sections ---------- */
@@ -290,8 +317,13 @@
 
   @media (max-width: 860px) {
     .steps, .styles-grid, .spec { grid-template-columns: 1fr; }
-    .stage { height: 340px; }
     .download-panel { padding: 32px 20px; }
+  }
+
+  @media (max-width: 640px) {
+    body { overflow-x: hidden; }
+    .nav-links { gap: 14px; }
+    .nav-anchor { display: none; }
   }
 </style>
 </head>
@@ -299,12 +331,16 @@
 
 <header class="site">
   <div class="wrap">
-    <a class="wordmark" href="#top">Bend<em>d</em></a>
+    <a class="wordmark" href="#top"><img src="assets/logo.png" alt="" width="26" height="26"><span>Bend<em>d</em></span></a>
     <nav class="nav-links">
-      <a href="#how">How it works</a>
-      <a href="#styles">Styles</a>
-      <a href="#download">Download</a>
+      <a class="nav-anchor" href="#how">How it works</a>
+      <a class="nav-anchor" href="#styles">Styles</a>
+      <a class="nav-anchor" href="#download">Download</a>
       <a href="https://github.com/nayeemdev/bendd">GitHub</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </button>
     </nav>
   </div>
 </header>
@@ -331,16 +367,13 @@
           <span class="deg" id="degReadout">128&deg;</span>
         </div>
         <div class="laptop">
-          <div class="screen" id="screen">
-            <div class="bezel">
-              <div class="dots"><span></span><span></span><span></span></div>
-              <div class="bars"><i></i><i></i><i></i><i></i></div>
-            </div>
+          <div class="screen">
+            <img id="screenImg" src="frames/angle_128.jpg" width="1100" height="715" alt="Bendd bending a real desktop shut as the lid closes, fading to black at the far edge" />
           </div>
           <div class="base"></div>
         </div>
       </div>
-      <p class="scroll-hint">&darr; scroll, the hinge follows you</p>
+      <p class="scroll-hint">&darr; scroll, the hinge follows you &middot; real captures from the app, not a mockup</p>
     </div>
   </section>
 
@@ -440,7 +473,7 @@
 
 <footer>
   <div class="wrap">
-    <a class="wordmark" href="#top">Bend<em>d</em></a>
+    <a class="wordmark" href="#top"><img src="assets/logo.png" alt="" width="26" height="26"><span>Bend<em>d</em></span></a>
     <div class="foot-links">
       <a href="https://github.com/nayeemdev/bendd">Source</a>
       <a href="https://github.com/nayeemdev/bendd/blob/main/LICENSE">MIT License</a>
@@ -451,26 +484,50 @@
 
 <script>
   (function () {
-    var screen = document.getElementById('screen');
+    var root = document.documentElement;
+    var btn = document.getElementById('themeToggle');
+    btn.addEventListener('click', function () {
+      var current = root.getAttribute('data-theme');
+      var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var effective = current || (systemDark ? 'dark' : 'light');
+      var next = effective === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('bendd-theme', next);
+    });
+  })();
+
+  // Real screenshots from the app at each lid angle, swapped by scroll
+  // position instead of a hand-tuned CSS transform, since the actual bend
+  // (keystone perspective, blur, and black fade) doesn't reduce to a simple
+  // rotateX/blur/brightness formula.
+  (function () {
+    var img = document.getElementById('screenImg');
     var readout = document.getElementById('degReadout');
     var stage = document.getElementById('stage');
     var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    var OPEN_DEG = 38;
-    var CLOSED_DEG = 84;
+    var ANGLES = [128, 122, 116, 110, 104, 98, 92, 86, 80, 74, 68, 62, 56, 50, 44, 38, 32];
+    var frames = {};
+    ANGLES.forEach(function (a) {
+      var src = 'frames/angle_' + String(a).padStart(3, '0') + '.jpg';
+      var pre = new Image();
+      pre.src = src;
+      frames[a] = src;
+    });
 
+    var lastAngle = null;
     function render(progress) {
       var p = Math.max(0, Math.min(1, progress));
-      var tilt = OPEN_DEG + (CLOSED_DEG - OPEN_DEG) * p;
-      var angle = Math.round(128 - p * 118);
-      var blur = p * 3.2;
-      var dim = 1 - p * 0.45;
-      screen.style.transform = 'rotateX(' + tilt + 'deg)';
-      screen.style.filter = 'blur(' + blur + 'px) brightness(' + dim + ')';
-      readout.textContent = angle + '°';
+      var index = Math.round(p * (ANGLES.length - 1));
+      var angle = ANGLES[index];
+      if (angle !== lastAngle) {
+        img.src = frames[angle];
+        readout.textContent = angle + '°';
+        lastAngle = angle;
+      }
     }
 
-    if (reduceMotion) { render(0.15); return; }
+    if (reduceMotion) { render(0.5); return; }
 
     function update() {
       var rect = stage.getBoundingClientRect();
