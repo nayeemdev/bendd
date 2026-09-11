@@ -18,6 +18,9 @@ public final class BendController {
     public var onActiveChange: ((Bool) -> Void)?
     /// Called whenever a capture attempt fails, e.g. Screen Recording permission denied.
     public var onCaptureError: ((Error) -> Void)?
+    /// Called right after a capture attempt succeeds, so a previously shown
+    /// capture error can be cleared instead of lingering forever.
+    public var onCaptureRecovered: (() -> Void)?
     /// Called when the lid crosses back past the clear angle while open, so a
     /// chime can play. Not fired just because the user toggled the effect off.
     public var onLidFullyOpened: (() -> Void)?
@@ -68,6 +71,7 @@ public final class BendController {
                 do {
                     let display = try await DesktopCapture.builtInDisplay()
                     try await capture.start(display: display)
+                    self?.onCaptureRecovered?()
                 } catch {
                     self?.onCaptureError?(error)
                 }

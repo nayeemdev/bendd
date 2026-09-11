@@ -56,9 +56,13 @@ final class StatusItemController: NSObject, NSPopoverDelegate {
         // Built fresh on every show and torn down on close (see
         // popoverDidClose) so the mini-preview's animation timer only runs
         // while the popover is actually visible.
-        popover.contentViewController = NSHostingController(
+        let hostingController = NSHostingController(
             rootView: SettingsView(store: store, currentAngleProvider: currentAngleProvider)
         )
+        // Without this, the popover can present before SwiftUI's ideal size
+        // is known and clip the top of the content instead of sizing to fit.
+        hostingController.sizingOptions = [.preferredContentSize]
+        popover.contentViewController = hostingController
         popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
         popover.contentViewController?.view.window?.makeKey()
     }

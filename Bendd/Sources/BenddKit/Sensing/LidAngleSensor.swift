@@ -19,7 +19,10 @@ public final class LidAngleSensor {
     private var timer: Timer?
     private var hasReading = false
 
-    public private(set) var angleDegrees: Double = 0
+    /// Defaults to "open" rather than 0/"closed": if the one-time synchronous
+    /// read in init ever fails, assuming closed would make the controller
+    /// think the lid just slammed shut and eagerly start capture.
+    public private(set) var angleDegrees: Double = BendConfiguration.default.clearAngleDegrees
 
     /// Overrides the sensor reading, for previewing the effect without moving the lid.
     public var debugAngleOverride: Double?
@@ -61,6 +64,15 @@ public final class LidAngleSensor {
     private init(manager: IOHIDManager, device: IOHIDDevice) {
         self.manager = manager
         self.device = device
+
+        // Read once synchronously so angleDegrees reflects the Mac's actual
+        // lid position from the moment this object exists, not a guessed
+        // default: starting at 0 (fully closed) would make the controller
+        // think the lid just slammed shut on every single launch.
+        if let raw = Self.readRawAngle(from: device) {
+            angleDegrees = raw
+            hasReading = true
+        }
     }
 
     deinit {
@@ -93,13 +105,8 @@ public final class LidAngleSensor {
     }
 
     private func poll() {
-        var report = [UInt8](repeating: 0, count: 8)
-        var length = CFIndex(report.count)
+        guard let raw = Self.readRawAngle(from: device) else { return }
 
-        let result = IOHIDDeviceGetReport(device, kIOHIDReportTypeFeature, Self.reportID, &report, &length)
-        guard result == kIOReturnSuccess, length >= 3 else { return }
-
-        let raw = Double(UInt16(report[2]) << 8 | UInt16(report[1]))
         if hasReading {
             angleDegrees = Self.smoothingFactor * raw + (1 - Self.smoothingFactor) * angleDegrees
         } else {
@@ -107,5 +114,15 @@ public final class LidAngleSensor {
             hasReading = true
         }
         onAngleChange?(effectiveAngleDegrees)
+    }
+
+    private static func readRawAngle(from device: IOHIDDevice) -> Double? {
+        var report = [UInt8](repeating: 0, count: 8)
+        var length = CFIndex(report.count)
+
+        let result = IOHIDDeviceGetReport(device, kIOHIDReportTypeFeature, reportID, &report, &length)
+        guard result == kIOReturnSuccess, length >= 3 else { return nil }
+
+        return Double(UInt16(report[2]) << 8 | UInt16(report[1]))
     }
 }

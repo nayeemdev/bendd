@@ -40,6 +40,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         controller.onCaptureError = { [store] error in
             DispatchQueue.main.async { store.captureErrorMessage = "\(error)" }
         }
+        controller.onCaptureRecovered = { [store] in
+            DispatchQueue.main.async { store.captureErrorMessage = nil }
+        }
         controller.onLidFullyOpened = {
             NSSound(named: "Tink")?.play()
         }
