@@ -28,11 +28,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             fatalError("No screen available to render the bend overlay on.")
         }
 
+        store.isSensorAvailable = controller.isSensorAvailable
+
         let overlay = OverlayWindowController(screen: builtInScreen, device: device, renderer: controller.renderer)
         self.overlay = overlay
 
         controller.onActiveChange = { [overlay] isActive in
             overlay.setActive(isActive)
+        }
+        controller.onCaptureError = { [store] error in
+            DispatchQueue.main.async { store.captureErrorMessage = "\(error)" }
         }
 
         controller.configuration = store.configuration
@@ -46,16 +51,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Seed from any debug override already on the sensor (e.g. BENDD_DEBUG_ANGLE)
         // so subscribing below doesn't immediately clobber it back to nil.
-        store.previewAngleOverride = controller.sensor.debugAngleOverride
+        store.previewAngleOverride = controller.sensor?.debugAngleOverride
 
         store.$previewAngleOverride
-            .sink { [controller] override in controller.sensor.debugAngleOverride = override }
+            .sink { [controller] override in controller.sensor?.debugAngleOverride = override }
             .store(in: &cancellables)
 
         let statusItemController = StatusItemController(store: store) { [controller] in
-            controller.sensor.effectiveAngleDegrees
+            controller.sensor?.effectiveAngleDegrees ?? BendConfiguration.default.clearAngleDegrees
         }
         self.statusItemController = statusItemController
+
+        observeSystemEvents(overlay: overlay)
 
         controller.start()
 
@@ -64,6 +71,28 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 NSApp.activate(ignoringOtherApps: true)
                 statusItemController.show()
             }
+        }
+    }
+
+    /// Sleep/wake and screen-configuration changes that the overlay must not
+    /// visibly glitch through: no stuck frame across a sleep, no stale frame
+    /// geometry after a display change.
+    private func observeSystemEvents(overlay: OverlayWindowController) {
+        let workspaceCenter = NSWorkspace.shared.notificationCenter
+
+        workspaceCenter.addObserver(forName: NSWorkspace.willSleepNotification, object: nil, queue: .main) { [controller] _ in
+            overlay.setActive(false)
+            Task { await controller.capture.stop() }
+        }
+
+        workspaceCenter.addObserver(forName: NSWorkspace.screensDidSleepNotification, object: nil, queue: .main) { [controller] _ in
+            overlay.setActive(false)
+            Task { await controller.capture.stop() }
+        }
+
+        NotificationCenter.default.addObserver(forName: NSApplication.didChangeScreenParametersNotification, object: nil, queue: .main) { _ in
+            guard let screen = NSScreen.builtIn ?? NSScreen.main else { return }
+            overlay.updateScreen(screen)
         }
     }
 

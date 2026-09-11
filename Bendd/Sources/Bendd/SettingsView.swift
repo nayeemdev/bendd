@@ -14,11 +14,24 @@ struct SettingsView: View {
         VStack(alignment: .leading, spacing: 16) {
             header
 
+            if !store.isSensorAvailable {
+                banner(
+                    "No lid angle sensor was found on this Mac, so Bendd has nothing to react to.",
+                    symbol: "exclamationmark.triangle"
+                )
+            }
+
+            if let message = store.captureErrorMessage {
+                captureErrorBanner(message)
+            }
+
             preview
                 .frame(height: 110)
                 .frame(maxWidth: .infinity)
+                .opacity(store.isSensorAvailable ? 1 : 0.4)
 
             Toggle("Effect enabled", isOn: $store.configuration.isEffectEnabled)
+                .disabled(!store.isSensorAvailable)
 
             Picker("Style", selection: $store.configuration.style) {
                 ForEach(BendStyle.allCases, id: \.self) { style in
@@ -26,10 +39,13 @@ struct SettingsView: View {
                 }
             }
             .pickerStyle(.segmented)
+            .disabled(!store.isSensorAvailable)
 
             sliders
+                .disabled(!store.isSensorAvailable)
 
             previewSlider
+                .disabled(!store.isSensorAvailable)
 
             Divider()
 
@@ -122,6 +138,25 @@ struct SettingsView: View {
                 guard isPreviewing else { return }
                 store.previewAngleOverride = newValue
             }
+        }
+    }
+
+    private func banner(_ message: String, symbol: String) -> some View {
+        Label(message, systemImage: symbol)
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
+    private func captureErrorBanner(_ message: String) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            banner("Bendd can't see the desktop to bend it: \(message)", symbol: "exclamationmark.triangle")
+            Button("Open Screen Recording Settings") {
+                if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture") {
+                    NSWorkspace.shared.open(url)
+                }
+            }
+            .font(.caption)
         }
     }
 

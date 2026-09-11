@@ -66,12 +66,12 @@ Exit criteria: a friend could open the app, tweak sliders, see a live preview, a
 
 Goal: make it survive real world conditions, not just your dev machine.
 
-- [ ] Handle Screen Recording permission gracefully: detect if it's not granted, show a clear prompt/deep link to System Settings, and don't crash.
-- [ ] Handle external displays: effect should only apply to the built in display, and should not break when an external monitor is connected/disconnected mid session.
-- [ ] Handle sleep/wake and lid close to actual sleep transition (macOS may sleep the Mac at full closure, make sure the overlay doesn't linger as a stuck frame).
-- [ ] Handle multiple Spaces / full screen apps / Mission Control, decide and test whether the overlay should appear over full screen apps.
-- [ ] Add crash safety, if the sensor read or capture stream throws, fail silently to "no effect" rather than crashing or freezing the display.
-- [ ] Test on at least 2 different MacBook models/macOS versions if possible (sensor behavior can vary).
+- [x] Handle Screen Recording permission gracefully: detect if it's not granted, show a clear prompt/deep link to System Settings, and don't crash.
+- [x] Handle external displays: effect should only apply to the built in display, and should not break when an external monitor is connected/disconnected mid session. (Capture always targets the built-in `SCDisplay` specifically; the overlay re-anchors its frame on any screen configuration change.)
+- [x] Handle sleep/wake and lid close to actual sleep transition (macOS may sleep the Mac at full closure, make sure the overlay doesn't linger as a stuck frame). (Overlay force-hides and capture stops on `willSleep`/`screensDidSleep`; normal polling picks the real state back up on wake.)
+- [x] Handle multiple Spaces / full screen apps / Mission Control, decide and test whether the overlay should appear over full screen apps. (Decision: yes, it should, the whole physical display bends regardless of what's on it, so the overlay joins all Spaces via `.canJoinAllSpaces`.)
+- [x] Add crash safety, if the sensor read or capture stream throws, fail silently to "no effect" rather than crashing or freezing the display. (Missing sensor degrades to a disabled, explained state in settings instead of a crash; capture failures surface as a dismissable banner instead of taking down the app.)
+- [ ] Test on at least 2 different MacBook models/macOS versions if possible (sensor behavior can vary). (Only one machine, this M5 MacBook Air on macOS 26.6, was available to test against during this build. Worth doing before a wider release.)
 
 Exit criteria: you can't break it by unplugging monitors, sleeping, waking, or force quitting mid animation.
 
