@@ -33,6 +33,9 @@ struct SettingsView: View {
             Toggle("Effect enabled", isOn: $store.configuration.isEffectEnabled)
                 .disabled(!store.isSensorAvailable)
 
+            Toggle("Play a sound when fully open", isOn: $store.configuration.isSoundEnabled)
+                .disabled(!store.isSensorAvailable)
+
             Picker("Style", selection: $store.configuration.style) {
                 ForEach(BendStyle.allCases, id: \.self) { style in
                     Text(style.displayName).tag(style)
@@ -53,6 +56,8 @@ struct SettingsView: View {
                 .onChange(of: store.configuration.launchAtLogin) { _, enabled in
                     LaunchAtLogin.setEnabled(enabled)
                 }
+
+            aboutFooter
 
             HStack {
                 Spacer()
@@ -139,6 +144,23 @@ struct SettingsView: View {
                 store.previewAngleOverride = newValue
             }
         }
+    }
+
+    private var aboutFooter: some View {
+        HStack(spacing: 6) {
+            Text("Bendd \(Self.versionString)")
+            Text("·")
+            Link("Source & issues", destination: URL(string: "https://github.com/nayeemdev/bendd")!)
+        }
+        .font(.caption)
+        .foregroundStyle(.secondary)
+    }
+
+    private static var versionString: String {
+        guard let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String else {
+            return "(development build)"
+        }
+        return "v\(version)"
     }
 
     private func banner(_ message: String, symbol: String) -> some View {

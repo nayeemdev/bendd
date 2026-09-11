@@ -1,6 +1,7 @@
 public struct BendConfiguration: Codable, Equatable, Sendable {
     public var style: BendStyle
     public var isEffectEnabled: Bool
+    public var isSoundEnabled: Bool
     public var launchAtLogin: Bool
 
     /// Lid angle in degrees above which the desktop renders untouched.
@@ -20,6 +21,7 @@ public struct BendConfiguration: Codable, Equatable, Sendable {
     public static let `default` = BendConfiguration(
         style: .silk,
         isEffectEnabled: true,
+        isSoundEnabled: true,
         launchAtLogin: false,
         clearAngleDegrees: 110,
         perspectiveDepth: 80,
@@ -30,6 +32,7 @@ public struct BendConfiguration: Codable, Equatable, Sendable {
     public init(
         style: BendStyle,
         isEffectEnabled: Bool,
+        isSoundEnabled: Bool,
         launchAtLogin: Bool,
         clearAngleDegrees: Double,
         perspectiveDepth: Double,
@@ -38,6 +41,7 @@ public struct BendConfiguration: Codable, Equatable, Sendable {
     ) {
         self.style = style
         self.isEffectEnabled = isEffectEnabled
+        self.isSoundEnabled = isSoundEnabled
         self.launchAtLogin = launchAtLogin
         self.clearAngleDegrees = clearAngleDegrees
         self.perspectiveDepth = perspectiveDepth

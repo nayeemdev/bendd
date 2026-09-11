@@ -8,6 +8,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let store = SettingsStore()
     private var overlay: OverlayWindowController?
     private var statusItemController: StatusItemController?
+    private var onboardingWindowController: OnboardingWindowController?
     private var cancellables: Set<AnyCancellable> = []
 
     override init() {
@@ -39,6 +40,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         controller.onCaptureError = { [store] error in
             DispatchQueue.main.async { store.captureErrorMessage = "\(error)" }
         }
+        controller.onLidFullyOpened = {
+            NSSound(named: "Tink")?.play()
+        }
 
         controller.configuration = store.configuration
         if LaunchAtLogin.isRegistered != store.configuration.launchAtLogin {
@@ -66,10 +70,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         controller.start()
 
+        let onboardingWindowController = OnboardingWindowController()
+        self.onboardingWindowController = onboardingWindowController
+        onboardingWindowController.showIfNeeded()
+
         if ProcessInfo.processInfo.environment["BENDD_DEBUG_SHOW_POPOVER"] != nil {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                NSApp.activate(ignoringOtherApps: true)
-                statusItemController.show()
+                statusItemController.simulateClick()
             }
         }
     }

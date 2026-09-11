@@ -18,6 +18,9 @@ public final class BendController {
     public var onActiveChange: ((Bool) -> Void)?
     /// Called whenever a capture attempt fails, e.g. Screen Recording permission denied.
     public var onCaptureError: ((Error) -> Void)?
+    /// Called when the lid crosses back past the clear angle while open, so a
+    /// chime can play. Not fired just because the user toggled the effect off.
+    public var onLidFullyOpened: (() -> Void)?
 
     public var configuration: BendConfiguration = .default {
         didSet {
@@ -27,6 +30,7 @@ public final class BendController {
     }
 
     private var isActive = false
+    private var isAngleClear = true
 
     public init(device: MTLDevice) throws {
         let sensor = LidAngleSensor.make()
@@ -47,7 +51,13 @@ public final class BendController {
     }
 
     private func handle(angle: Double) {
-        let shouldBeActive = configuration.isEffectEnabled && !BendTransform.isClear(lidAngleDegrees: angle, clearAngleDegrees: configuration.clearAngleDegrees)
+        let isClear = BendTransform.isClear(lidAngleDegrees: angle, clearAngleDegrees: configuration.clearAngleDegrees)
+        if isClear, !isAngleClear, configuration.isSoundEnabled {
+            onLidFullyOpened?()
+        }
+        isAngleClear = isClear
+
+        let shouldBeActive = configuration.isEffectEnabled && !isClear
         guard shouldBeActive != isActive else { return }
         isActive = shouldBeActive
         sensor?.setTrackingActive(shouldBeActive)

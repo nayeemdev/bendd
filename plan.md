@@ -81,11 +81,11 @@ Exit criteria: you can't break it by unplugging monitors, sleeping, waking, or f
 
 Goal: the small details that make it feel finished.
 
-- [ ] Add a soft click/chime sound on full open (crossing the clear angle threshold), using `NSSound` or `AVAudioPlayer`.
-- [ ] Add a General settings toggle to disable sound.
-- [ ] Design a proper menu bar icon (template image, light/dark mode aware) and app icon.
-- [ ] Write onboarding: first launch screen explaining Screen Recording permission and what the app does, with a "grant permission" button.
-- [ ] Add an About menu item (version number, contact email, link to project page).
+- [x] Add a soft click/chime sound on full open (crossing the clear angle threshold), using `NSSound` or `AVAudioPlayer`.
+- [x] Add a General settings toggle to disable sound.
+- [x] Design a proper menu bar icon (template image, light/dark mode aware) and app icon. (Menu bar icon is a custom drawn "tilting laptop" template glyph. The Finder/Dock app icon asset is deferred to Phase 6, where the real .app bundle it belongs in gets created.)
+- [x] Write onboarding: first launch screen explaining Screen Recording permission and what the app does, with a "grant permission" button.
+- [x] Add an About menu item (version number, contact email, link to project page). (Shown as a footer in the settings popover instead of a separate menu item, since the app has no traditional menu bar menu; links to the GitHub repo rather than a support email, since there isn't one yet.)
 
 Exit criteria: it feels like a finished indie app, not a script someone ran from Xcode.
 

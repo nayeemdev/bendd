@@ -16,7 +16,8 @@ final class StatusItemController: NSObject, NSPopoverDelegate {
         super.init()
 
         if let button = statusItem.button {
-            button.image = NSImage(systemSymbolName: "laptopcomputer", accessibilityDescription: "Bendd")
+            button.image = MenuBarIcon.make()
+            button.image?.accessibilityDescription = "Bendd"
             button.action = #selector(handleClick)
             button.target = self
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
@@ -44,9 +45,11 @@ final class StatusItemController: NSObject, NSPopoverDelegate {
         }
     }
 
-    func show() {
-        guard let button = statusItem.button else { return }
-        show(relativeTo: button)
+    /// Simulates a real click on the status item, for debug/preview tooling
+    /// only, so testing goes through the exact same path a real click would
+    /// rather than skipping AppKit's own activation handling.
+    func simulateClick() {
+        statusItem.button?.performClick(nil)
     }
 
     private func show(relativeTo button: NSStatusBarButton) {
