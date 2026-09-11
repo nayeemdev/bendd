@@ -1,4 +1,5 @@
 import SwiftUI
+import CoreGraphics
 import BenddKit
 
 struct SettingsView: View {
@@ -7,6 +8,7 @@ struct SettingsView: View {
 
     @State private var displayedAngle: Double = BendConfiguration.default.clearAngleDegrees
     @State private var isPreviewing = false
+    @State private var isScreenRecordingGranted = CGPreflightScreenCaptureAccess()
 
     private let previewTimer = Timer.publish(every: 1.0 / 30.0, on: .main, in: .common).autoconnect()
 
@@ -20,6 +22,8 @@ struct SettingsView: View {
                     symbol: "exclamationmark.triangle"
                 )
             }
+
+            permissionRow
 
             if let message = store.captureErrorMessage {
                 captureErrorBanner(message)
@@ -72,6 +76,27 @@ struct SettingsView: View {
         .onReceive(previewTimer) { _ in
             guard !isPreviewing else { return }
             displayedAngle = currentAngleProvider()
+            isScreenRecordingGranted = CGPreflightScreenCaptureAccess()
+        }
+    }
+
+    private var permissionRow: some View {
+        HStack(spacing: 6) {
+            Circle()
+                .fill(isScreenRecordingGranted ? Color.green : Color.orange)
+                .frame(width: 7, height: 7)
+            Text(isScreenRecordingGranted ? "Screen Recording access granted" : "Screen Recording access not granted")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            Spacer()
+            if !isScreenRecordingGranted {
+                Button("Grant…") {
+                    if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }
+                .font(.caption)
+            }
         }
     }
 

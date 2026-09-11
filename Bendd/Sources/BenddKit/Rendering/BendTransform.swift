@@ -5,14 +5,11 @@ public enum BendTransform {
         lidAngleDegrees >= clearAngleDegrees
     }
 
-    /// 0 when the lid is at or above the clear angle, ramping to 1 as it closes.
     public static func bendFraction(forLidAngleDegrees lidAngle: Double, clearAngleDegrees: Double) -> Double {
         let openness = max(0, min(1, lidAngle / clearAngleDegrees))
         return 1 - openness
     }
 
-    /// Converts a raw lid angle reading into a bend tilt: flat when the lid is
-    /// past the clear angle, maximal as it approaches closed.
     public static func tiltDegrees(forLidAngleDegrees lidAngle: Double, clearAngleDegrees: Double, maxTiltDegrees: Double) -> Float {
         Float(bendFraction(forLidAngleDegrees: lidAngle, clearAngleDegrees: clearAngleDegrees) * maxTiltDegrees)
     }

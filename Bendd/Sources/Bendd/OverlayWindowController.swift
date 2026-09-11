@@ -48,8 +48,6 @@ final class OverlayWindowController {
         }
     }
 
-    /// Re-anchors the overlay to the built-in screen's current geometry,
-    /// for resolution changes or an external display being attached/removed.
     func updateScreen(_ screen: NSScreen) {
         window.setFrame(screen.frame, display: true)
     }

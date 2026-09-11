@@ -84,9 +84,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    /// Sleep/wake and screen-configuration changes that the overlay must not
-    /// visibly glitch through: no stuck frame across a sleep, no stale frame
-    /// geometry after a display change.
     private func observeSystemEvents(overlay: OverlayWindowController) {
         let workspaceCenter = NSWorkspace.shared.notificationCenter
 

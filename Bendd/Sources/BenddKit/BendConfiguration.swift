@@ -4,13 +4,9 @@ public struct BendConfiguration: Codable, Equatable, Sendable {
     public var isSoundEnabled: Bool
     public var launchAtLogin: Bool
 
-    /// Lid angle in degrees above which the desktop renders untouched.
     public var clearAngleDegrees: Double
-    /// Maximum tilt in degrees applied at a fully closed lid.
     public var perspectiveDepth: Double
-    /// Multiplier on the style's base blur amount.
     public var blurAmount: Double
-    /// Multiplier on the style's base shadow amount.
     public var shadowStrength: Double
 
     public static let clearAngleRange: ClosedRange<Double> = 60...130

@@ -45,17 +45,13 @@ final class StatusItemController: NSObject, NSPopoverDelegate {
         }
     }
 
-    /// Simulates a real click on the status item, for debug/preview tooling
-    /// only, so testing goes through the exact same path a real click would
-    /// rather than skipping AppKit's own activation handling.
     func simulateClick() {
         statusItem.button?.performClick(nil)
     }
 
     private func show(relativeTo button: NSStatusBarButton) {
-        // Built fresh on every show and torn down on close (see
-        // popoverDidClose) so the mini-preview's animation timer only runs
-        // while the popover is actually visible.
+        // Rebuilt on every show and torn down in popoverDidClose, so the
+        // preview's animation timer doesn't keep running while hidden.
         let hostingController = NSHostingController(
             rootView: SettingsView(store: store, currentAngleProvider: currentAngleProvider)
         )

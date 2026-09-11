@@ -9,15 +9,8 @@ final class SettingsStore: ObservableObject {
         didSet { persist() }
     }
 
-    /// Transient lid angle override while the user drags the preview slider.
-    /// Not persisted; nil means "use the real sensor".
     @Published var previewAngleOverride: Double?
-
-    /// Set once at launch; true unless this Mac has no lid angle sensor.
     @Published var isSensorAvailable = true
-
-    /// Set whenever a desktop capture attempt fails, most commonly a denied
-    /// Screen Recording permission. Cleared once the user re-grants it.
     @Published var captureErrorMessage: String?
 
     init() {

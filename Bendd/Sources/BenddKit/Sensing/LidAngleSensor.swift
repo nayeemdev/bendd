@@ -7,10 +7,7 @@ public final class LidAngleSensor {
     private static let usagePage = 0x0020
     private static let usage = 0x008A
     private static let reportID: CFIndex = 1
-    /// Fast enough for smooth tracking while the bend effect is visible.
     private static let activePollingInterval: TimeInterval = 1.0 / 60.0
-    /// Coarse enough to keep idle cost near zero while the lid sits open;
-    /// still responsive enough that starting to close the lid is never noticeably late.
     private static let idlePollingInterval: TimeInterval = 1.0 / 10.0
     private static let smoothingFactor = 0.25
 
@@ -19,12 +16,11 @@ public final class LidAngleSensor {
     private var timer: Timer?
     private var hasReading = false
 
-    /// Defaults to "open" rather than 0/"closed": if the one-time synchronous
-    /// read in init ever fails, assuming closed would make the controller
-    /// think the lid just slammed shut and eagerly start capture.
+    // Defaults to "open", not 0/"closed": if the synchronous read in init
+    // below ever fails, assuming closed would make the controller think the
+    // lid just slammed shut and eagerly start capture.
     public private(set) var angleDegrees: Double = BendConfiguration.default.clearAngleDegrees
 
-    /// Overrides the sensor reading, for previewing the effect without moving the lid.
     public var debugAngleOverride: Double?
 
     public var effectiveAngleDegrees: Double {
@@ -65,10 +61,6 @@ public final class LidAngleSensor {
         self.manager = manager
         self.device = device
 
-        // Read once synchronously so angleDegrees reflects the Mac's actual
-        // lid position from the moment this object exists, not a guessed
-        // default: starting at 0 (fully closed) would make the controller
-        // think the lid just slammed shut on every single launch.
         if let raw = Self.readRawAngle(from: device) {
             angleDegrees = raw
             hasReading = true
@@ -90,8 +82,6 @@ public final class LidAngleSensor {
         timer = nil
     }
 
-    /// Poll quickly while the effect is active and visible; fall back to a
-    /// coarse rate the rest of the time so idle cost stays near zero.
     public func setTrackingActive(_ isActive: Bool) {
         guard timer != nil else { return }
         reschedule(interval: isActive ? Self.activePollingInterval : Self.idlePollingInterval)

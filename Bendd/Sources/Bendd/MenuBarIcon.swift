@@ -1,8 +1,5 @@
 import AppKit
 
-/// A small custom glyph: a laptop base with its screen tilted forward, so the
-/// icon itself hints at what the app does. Drawn as a template image so
-/// AppKit tints it correctly for the light and dark menu bar.
 enum MenuBarIcon {
     static func make() -> NSImage {
         let size = NSSize(width: 18, height: 18)
@@ -12,11 +9,9 @@ enum MenuBarIcon {
             color.setFill()
             color.setStroke()
 
-            // Base / keyboard deck.
             let base = NSBezierPath(roundedRect: NSRect(x: 1.5, y: 1.5, width: 15, height: 3), xRadius: 1, yRadius: 1)
             base.fill()
 
-            // Screen, tilted forward around its bottom edge to read as "bending".
             context.saveGState()
             let hinge = CGPoint(x: 9, y: 5.2)
             context.translateBy(x: hinge.x, y: hinge.y)

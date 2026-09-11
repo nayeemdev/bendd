@@ -138,8 +138,6 @@ public final class BendRenderer: NSObject, MTKViewDelegate {
         commandBuffer.commit()
     }
 
-    /// Blurs `source` into a cached scratch texture when `sigma` calls for it,
-    /// reusing the allocation across frames as long as dimensions match.
     private func blurredTexture(for source: MTLTexture, sigma: Float, commandBuffer: MTLCommandBuffer) -> MTLTexture {
         guard sigma > 0.1 else { return source }
 

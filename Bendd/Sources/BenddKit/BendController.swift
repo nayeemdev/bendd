@@ -1,12 +1,5 @@
 import Metal
 
-/// Coordinates the sensor, desktop capture, and renderer: starts capture only
-/// while the lid is closed enough to need the bend effect, and stops it once
-/// the lid clears back past the threshold, so idle cost stays at zero.
-///
-/// Never throws or crashes on missing hardware or a denied permission: when
-/// the lid angle sensor isn't found, or a capture attempt fails, the app
-/// degrades to doing nothing rather than taking down the whole process.
 public final class BendController {
     public let sensor: LidAngleSensor?
     public let capture: DesktopCapture
@@ -14,15 +7,9 @@ public final class BendController {
 
     public let isSensorAvailable: Bool
 
-    /// Called whenever the effect should become visible or hide, on the main thread.
     public var onActiveChange: ((Bool) -> Void)?
-    /// Called whenever a capture attempt fails, e.g. Screen Recording permission denied.
     public var onCaptureError: ((Error) -> Void)?
-    /// Called right after a capture attempt succeeds, so a previously shown
-    /// capture error can be cleared instead of lingering forever.
     public var onCaptureRecovered: (() -> Void)?
-    /// Called when the lid crosses back past the clear angle while open, so a
-    /// chime can play. Not fired just because the user toggled the effect off.
     public var onLidFullyOpened: (() -> Void)?
 
     public var configuration: BendConfiguration = .default {
