@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Bendd — bend your desktop as the lid closes, like the iPhone Duo fold concept</title>
-<meta name="description" content="Bendd is a free, open source Mac menu bar app that makes your desktop visually bend as you close the lid, inspired by the iPhone Duo fold concept." />
+<title>Bendd — your MacBook's lid finally does something when it closes</title>
+<meta name="description" content="Bendd is a free, open source Mac menu bar app that bends your real desktop shut as the lid closes, using the hinge's actual angle sensor. No mockup, no keyframes, just a shader doing what it's told." />
 <meta name="robots" content="index, follow" />
-<link rel="canonical" href="https://blendd.nayeem.me/" />
+<link rel="canonical" href="https://bendd.nayeem.me/" />
 
 <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="32x32" />
 <link rel="apple-touch-icon" href="apple-touch-icon.png" />
 <meta name="theme-color" content="#efece4" media="(prefers-color-scheme: light)" />
-<meta name="theme-color" content="#0b0d12" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#15120e" media="(prefers-color-scheme: dark)" />
 <script>
   (function () {
     var stored = localStorage.getItem('bendd-theme');
@@ -30,33 +30,33 @@
 
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Bendd" />
-<meta property="og:title" content="Bendd — bend your desktop as the lid closes, like the iPhone Duo fold concept" />
-<meta property="og:description" content="A free, open source Mac menu bar app that makes your desktop visually bend as you close the lid, inspired by the iPhone Duo fold concept." />
-<meta property="og:url" content="https://blendd.nayeem.me/" />
-<meta property="og:image" content="https://blendd.nayeem.me/og-image.png" />
+<meta property="og:title" content="Bendd — your MacBook's lid finally does something when it closes" />
+<meta property="og:description" content="A free, open source Mac menu bar app that bends your real desktop shut as the lid closes, using the hinge's actual angle sensor." />
+<meta property="og:url" content="https://bendd.nayeem.me/" />
+<meta property="og:image" content="https://bendd.nayeem.me/og-image.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Bendd — bend your desktop as the lid closes, like the iPhone Duo fold concept" />
-<meta name="twitter:description" content="A free, open source Mac menu bar app that makes your desktop visually bend as you close the lid, inspired by the iPhone Duo fold concept." />
-<meta name="twitter:image" content="https://blendd.nayeem.me/og-image.png" />
+<meta name="twitter:title" content="Bendd — your MacBook's lid finally does something when it closes" />
+<meta name="twitter:description" content="A free, open source Mac menu bar app that bends your real desktop shut as the lid closes, using the hinge's actual angle sensor." />
+<meta name="twitter:image" content="https://bendd.nayeem.me/og-image.png" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --paper: #efece4;
+    --paper: #f5f5f3;
     --surface: #ffffff;
-    --surface-2: #e4e0d5;
-    --text: #24262b;
-    --text-dim: #5a5d64;
+    --surface-2: #ebebe8;
+    --text: #1c1e22;
+    --text-dim: #62666d;
     --hinge: #8a8f98;
-    --glow: #0f7fb0;
-    --glow-bright: #0a6690;
-    --glow-soft: rgba(15,127,176,0.14);
-    --line: rgba(36,38,43,0.12);
+    --accent: #b8460e;
+    --accent-bright: #93370a;
+    --accent-soft: rgba(184,70,14,0.12);
+    --line: rgba(0,0,0,0.12);
     --font-display: 'Fraunces', serif;
     --font-body: 'IBM Plex Sans', sans-serif;
     --font-mono: 'IBM Plex Mono', monospace;
@@ -64,30 +64,30 @@
 
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --paper: #0b0d12;
-      --surface: #12151c;
-      --surface-2: #171b23;
-      --text: #e7e9ed;
-      --text-dim: #8b909b;
-      --hinge: #6b7078;
-      --glow: #6fd0ff;
-      --glow-bright: #9fe3ff;
-      --glow-soft: rgba(111,208,255,0.10);
-      --line: rgba(231,233,237,0.10);
+      --paper: #15120e;
+      --surface: #1c1813;
+      --surface-2: #241f18;
+      --text: #efe9df;
+      --text-dim: #9a9187;
+      --hinge: #726a60;
+      --accent: #ff9d52;
+      --accent-bright: #ffbd82;
+      --accent-soft: rgba(255,157,82,0.14);
+      --line: rgba(239,233,223,0.13);
     }
   }
 
   :root[data-theme="dark"] {
-    --paper: #0b0d12;
-    --surface: #12151c;
-    --surface-2: #171b23;
-    --text: #e7e9ed;
-    --text-dim: #8b909b;
-    --hinge: #6b7078;
-    --glow: #6fd0ff;
-    --glow-bright: #9fe3ff;
-    --glow-soft: rgba(111,208,255,0.10);
-    --line: rgba(231,233,237,0.10);
+    --paper: #15120e;
+    --surface: #1c1813;
+    --surface-2: #241f18;
+    --text: #efe9df;
+    --text-dim: #9a9187;
+    --hinge: #726a60;
+    --accent: #ff9d52;
+    --accent-bright: #ffbd82;
+    --accent-soft: rgba(255,157,82,0.14);
+    --line: rgba(239,233,223,0.13);
   }
 
   * { box-sizing: border-box; }
@@ -104,36 +104,35 @@
   }
 
   a { color: inherit; }
-  ::selection { background: var(--glow-soft); }
+  ::selection { background: var(--accent-soft); }
 
-  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 32px; }
 
   /* ---------- Header ---------- */
 
   header.site {
     position: sticky; top: 0; z-index: 20;
-    background: color-mix(in srgb, var(--paper) 88%, transparent);
-    backdrop-filter: blur(10px);
+    background: var(--paper);
     border-bottom: 1px solid var(--line);
   }
-  header.site .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  header.site .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; }
   .wordmark { display: inline-flex; align-items: center; gap: 7px; font-family: var(--font-display); font-weight: 600; font-size: 22px; text-decoration: none; letter-spacing: -0.01em; }
-  .wordmark em { font-style: italic; color: var(--glow); }
-  .wordmark img { width: 26px; height: 26px; border-radius: 7px; display: block; }
-  footer .wordmark img { width: 20px; height: 20px; border-radius: 5.5px; }
-  .nav-links { display: flex; align-items: center; gap: 28px; font-size: 14px; font-family: var(--font-mono); }
+  .wordmark em { font-style: italic; color: var(--accent); }
+  .wordmark img { width: 24px; height: 24px; border-radius: 4px; display: block; }
+  footer .wordmark img { width: 20px; height: 20px; border-radius: 4px; }
+  .nav-links { display: flex; align-items: center; gap: 26px; font-size: 13.5px; font-family: var(--font-mono); }
   .nav-links a { text-decoration: none; color: var(--text-dim); border-bottom: 1px solid transparent; padding-bottom: 2px; transition: color 0.15s, border-color 0.15s; }
-  .nav-links a:hover, .nav-links a:focus-visible { color: var(--text); border-color: var(--glow); }
+  .nav-links a:hover, .nav-links a:focus-visible { color: var(--text); border-color: var(--accent); }
 
   .theme-toggle {
     display: flex; align-items: center; justify-content: center;
-    width: 32px; height: 32px; padding: 0;
-    background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+    width: 30px; height: 30px; padding: 0;
+    background: transparent; border: 1px solid var(--line); border-radius: 3px;
     color: var(--text-dim); cursor: pointer;
     transition: color 0.15s, border-color 0.15s;
   }
-  .theme-toggle:hover, .theme-toggle:focus-visible { color: var(--glow); border-color: var(--glow); }
-  .theme-toggle svg { width: 16px; height: 16px; }
+  .theme-toggle:hover, .theme-toggle:focus-visible { color: var(--accent); border-color: var(--accent); }
+  .theme-toggle svg { width: 15px; height: 15px; }
   .theme-toggle .icon-moon { display: block; }
   .theme-toggle .icon-sun { display: none; }
   @media (prefers-color-scheme: dark) {
@@ -148,56 +147,43 @@
   /* ---------- Hero ---------- */
 
   .hero {
-    padding: 76px 0 40px;
+    padding: 100px 0 64px;
     text-align: center;
-    position: relative;
-    overflow: clip;
   }
-  .hero::before {
-    content: "";
-    position: absolute;
-    top: -120px; left: 50%;
-    width: 900px; height: 500px;
-    transform: translateX(-50%);
-    background: radial-gradient(closest-side, var(--glow-soft), transparent 70%);
-    pointer-events: none;
-  }
+  .hero .wrap { width: 100%; }
   .eyebrow {
-    font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--glow); display: inline-flex; align-items: center; gap: 10px; margin-bottom: 22px;
+    font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.02em;
+    color: var(--text-dim); margin-bottom: 20px;
   }
-  .eyebrow::before {
-    content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--glow);
-    box-shadow: 0 0 0 4px var(--glow-soft);
-  }
+  .eyebrow .bracket { color: var(--accent); }
   h1 {
     font-family: var(--font-display); font-weight: 600;
-    font-size: clamp(42px, 6.4vw, 84px);
-    line-height: 1.0; margin: 0 auto 22px; text-wrap: balance; letter-spacing: -0.01em;
-    max-width: 16ch;
+    font-size: clamp(44px, 7vw, 96px);
+    line-height: 1.02; margin: 0 auto 26px; text-wrap: balance; letter-spacing: -0.01em;
+    max-width: 20ch;
   }
-  h1 em { font-style: italic; font-weight: 500; color: var(--glow); }
+  h1 em { font-style: italic; font-weight: 500; color: var(--accent); }
   .lede {
-    font-size: 19px; color: var(--text-dim); max-width: 46ch; margin: 0 auto 36px;
+    font-size: 20px; color: var(--text-dim); max-width: 62ch; margin: 0 auto 40px;
   }
-  .cta-row { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-bottom: 14px; }
+  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-bottom: 14px; }
   .btn {
     font-family: var(--font-mono); font-size: 14px; text-decoration: none;
-    padding: 14px 24px; border-radius: 9px; display: inline-flex; align-items: center; gap: 9px;
-    transition: transform 0.15s, background 0.15s, border-color 0.15s, box-shadow 0.15s;
+    padding: 13px 22px; border-radius: 3px; display: inline-flex; align-items: center; gap: 9px;
+    border: 1px solid transparent;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
   }
-  .btn:hover { transform: translateY(-1px); }
-  .btn-primary { background: var(--glow); color: #04121a; box-shadow: 0 8px 24px -8px var(--glow-soft); }
-  .btn-primary:hover { background: var(--glow-bright); }
-  .btn-ghost { border: 1px solid var(--line); color: var(--text); }
-  .btn-ghost:hover { border-color: var(--glow); }
+  .btn-primary { background: var(--accent); color: #fff8f0; }
+  .btn-primary:hover { background: var(--accent-bright); }
+  .btn-ghost { border-color: var(--line); color: var(--text); }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
   .btn svg { width: 15px; height: 15px; }
 
   .fine-print {
     font-family: var(--font-mono); font-size: 12.5px; color: var(--text-dim); margin: 0 0 56px;
   }
   .fine-print a { color: var(--text-dim); text-decoration: underline; text-underline-offset: 2px; }
-  .fine-print a:hover { color: var(--glow); }
+  .fine-print a:hover { color: var(--accent); }
 
   /* ---------- The hinge demo (hero centerpiece) ---------- */
 
@@ -206,7 +192,7 @@
     flex-direction: column;
     align-items: center;
     position: relative;
-    max-width: 720px;
+    max-width: 880px;
     margin: 0 auto;
   }
   .readout {
@@ -215,20 +201,20 @@
     color: var(--text-dim);
     text-align: center;
     line-height: 1.4;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
   .readout .deg {
-    font-size: 40px; color: var(--glow); font-weight: 500;
+    font-size: 44px; color: var(--accent); font-weight: 500;
     font-variant-numeric: tabular-nums; display: block;
   }
-  .laptop { width: 92%; max-width: 560px; }
+  .laptop { width: 92%; max-width: 700px; }
   .screen {
     aspect-ratio: 1100 / 715;
-    border-radius: 12px 12px 3px 3px;
+    border-radius: 10px 10px 2px 2px;
     background: #000;
     border: 1px solid var(--line);
     border-bottom: none;
-    box-shadow: 0 40px 80px -24px rgba(0,0,0,0.4);
+    box-shadow: 0 18px 32px -18px rgba(0,0,0,0.35);
     overflow: hidden;
     position: relative;
   }
@@ -239,91 +225,96 @@
     object-fit: cover;
   }
   .base {
-    height: 16px;
+    height: 14px;
     background: linear-gradient(180deg, var(--hinge), color-mix(in srgb, var(--hinge) 55%, var(--paper)));
-    border-radius: 3px 3px 9px 9px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.22);
+    border-radius: 2px 2px 7px 7px;
   }
 
   .scroll-hint {
     font-family: var(--font-mono); font-size: 12px; color: var(--text-dim);
-    text-align: center; margin-top: 14px; letter-spacing: 0.04em;
+    text-align: center; margin-top: 14px; letter-spacing: 0.02em;
   }
 
   /* ---------- Sections ---------- */
 
-  section { padding: 76px 0; border-top: 1px solid var(--line); }
-  .section-head { max-width: 60ch; margin-bottom: 44px; }
+  section { padding: 72px 0; border-top: 1px solid var(--line); }
+  .section-head { max-width: 66ch; margin-bottom: 40px; }
   .section-head .eyebrow { margin-bottom: 10px; }
-  h2 { font-family: var(--font-display); font-weight: 600; font-size: clamp(28px, 3.4vw, 38px); margin: 0 0 14px; text-wrap: balance; }
+  h2 { font-family: var(--font-display); font-weight: 600; font-size: clamp(26px, 3.2vw, 36px); margin: 0 0 14px; text-wrap: balance; }
   .section-head p { color: var(--text-dim); margin: 0; font-size: 16.5px; }
 
-  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
-  .step { background: var(--surface); padding: 30px 28px; }
-  .step .tag { font-family: var(--font-mono); font-size: 12px; color: var(--glow); letter-spacing: 0.06em; }
-  .step h3 { font-family: var(--font-display); font-weight: 600; font-size: 21px; margin: 10px 0 8px; }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .step { background: var(--surface); padding: 28px 26px; }
+  .step .tag { font-family: var(--font-mono); font-size: 12px; color: var(--accent); letter-spacing: 0.04em; }
+  .step h3 { font-family: var(--font-display); font-weight: 600; font-size: 20px; margin: 10px 0 8px; }
   .step p { color: var(--text-dim); font-size: 15px; margin: 0; }
 
-  .styles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
-  .style-card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 22px; perspective: 900px; }
+  .styles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .style-card { background: var(--surface); padding: 20px; }
   .style-card .swatch {
-    aspect-ratio: 16/10.5; border-radius: 8px; background: var(--surface-2);
-    transform: rotateX(22deg); transform-origin: bottom center;
-    transition: transform 0.4s cubic-bezier(.2,.8,.2,1), filter 0.4s;
-    margin-bottom: 18px; position: relative; overflow: hidden;
+    aspect-ratio: 16/10.5; border-radius: 3px; background: var(--surface-2);
+    transition: filter 0.3s ease;
+    margin-bottom: 16px; position: relative; overflow: hidden;
   }
-  .style-card .swatch::after { content: ""; position: absolute; inset: 0; background: linear-gradient(135deg, var(--glow-soft), transparent 60%); }
-  .style-card:hover .swatch { transform: rotateX(46deg); }
+  .style-card:hover .swatch { filter: brightness(0.9); }
   .swatch.silk { filter: blur(0.3px) brightness(1); }
-  .style-card:hover .swatch.silk { filter: blur(2.5px) brightness(0.92); }
-  .swatch.shade { filter: brightness(0.85); }
-  .style-card:hover .swatch.shade { filter: blur(1px) brightness(0.55); }
-  .swatch.frost { filter: saturate(0.9); }
-  .style-card:hover .swatch.frost { filter: blur(2px) saturate(0.25) brightness(0.7); }
+  .style-card:hover .swatch.silk { filter: blur(2.5px) brightness(0.94); }
+  .swatch.shade { filter: brightness(0.82); }
+  .style-card:hover .swatch.shade { filter: blur(0.8px) brightness(0.5); }
+  .swatch.frost { filter: saturate(0.85); }
+  .style-card:hover .swatch.frost { filter: blur(2px) saturate(0.2) brightness(0.75); }
   .style-card h3 { font-family: var(--font-display); font-size: 19px; font-weight: 600; margin: 0 0 6px; }
   .style-card p { color: var(--text-dim); font-size: 14.5px; margin: 0; }
+
+  .limits-list { display: flex; flex-direction: column; gap: 0; border-top: 1px solid var(--line); }
+  .limits-list li { list-style: none; display: flex; gap: 18px; padding: 20px 0; border-bottom: 1px solid var(--line); }
+  .limits-list .mark { font-family: var(--font-mono); color: var(--accent); flex: none; font-size: 15px; padding-top: 1px; }
+  .limits-list p { margin: 0; font-size: 15.5px; color: var(--text-dim); }
+  .limits-list p strong { color: var(--text); font-weight: 600; }
 
   .spec { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 40px; border-top: 1px solid var(--line); }
   .spec dl { display: grid; grid-template-columns: 1fr auto; gap: 14px 20px; margin: 0; padding: 22px 0; border-bottom: 1px solid var(--line); }
   .spec dt { color: var(--text-dim); font-size: 14.5px; }
   .spec dd { margin: 0; font-family: var(--font-mono); font-size: 14.5px; text-align: right; font-variant-numeric: tabular-nums; }
 
-  .privacy { display: flex; align-items: center; gap: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 24px 28px; }
-  .privacy .icon { font-family: var(--font-mono); font-size: 22px; color: var(--glow); flex: none; }
+  .privacy { display: flex; align-items: flex-start; gap: 16px; border: 1px solid var(--line); border-radius: 3px; padding: 22px 24px; }
+  .privacy .icon { font-family: var(--font-mono); font-size: 14px; color: var(--accent); flex: none; padding-top: 3px; }
   .privacy p { margin: 0; color: var(--text-dim); font-size: 15px; }
   .privacy strong { color: var(--text); }
 
   /* download section */
   .download-panel {
-    background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
-    padding: 48px; text-align: center;
+    border: 1px solid var(--line); border-radius: 3px;
+    padding: 44px; text-align: center;
     display: flex; flex-direction: column; align-items: center; gap: 18px;
   }
   .download-panel h2 { margin-bottom: 4px; }
   .download-meta { display: flex; gap: 18px; font-family: var(--font-mono); font-size: 13px; color: var(--text-dim); flex-wrap: wrap; justify-content: center; }
   .notarize-note {
-    text-align: left; width: 100%; max-width: 46ch;
-    background: var(--glow-soft); border: 1px solid var(--glow);
-    border-radius: 12px; padding: 16px 18px; font-size: 14px; color: var(--text);
+    text-align: left; width: 100%; max-width: 64ch;
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 3px; padding: 16px 18px; font-size: 14px; color: var(--text);
   }
-  .notarize-note strong { color: var(--glow-bright); }
+  .notarize-note strong { color: var(--accent); }
   .notarize-note code {
     font-family: var(--font-mono); font-size: 12.5px; background: var(--surface-2);
-    padding: 2px 6px; border-radius: 4px;
+    padding: 2px 6px; border-radius: 2px;
   }
   .notarize-note p { margin: 8px 0 0; }
   .notarize-note p:first-child { margin-top: 0; }
 
-  footer { border-top: 1px solid var(--line); padding: 40px 0 56px; }
-  footer .wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+  footer { border-top: 1px solid var(--line); padding: 36px 0 52px; }
+  footer .wrap { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; }
+  .foot-left { display: flex; flex-direction: column; gap: 8px; }
   footer .wordmark { font-size: 17px; }
+  .foot-note { font-size: 13px; color: var(--text-dim); margin: 0; max-width: 46ch; }
   .foot-links { display: flex; gap: 22px; font-family: var(--font-mono); font-size: 13px; color: var(--text-dim); }
   .foot-links a { text-decoration: none; }
-  .foot-links a:hover { color: var(--glow); }
+  .foot-links a:hover { color: var(--accent); }
 
   @media (max-width: 860px) {
     .steps, .styles-grid, .spec { grid-template-columns: 1fr; }
-    .download-panel { padding: 32px 20px; }
+    .download-panel { padding: 30px 20px; }
   }
 
   @media (max-width: 640px) {
@@ -337,11 +328,11 @@
 
 <header class="site">
   <div class="wrap">
-    <a class="wordmark" href="#top"><img src="assets/logo.png" alt="" width="26" height="26"><span>Bend<em>d</em></span></a>
+    <a class="wordmark" href="#top"><img src="assets/logo.png" alt="" width="24" height="24"><span>Bend<em>d</em></span></a>
     <nav class="nav-links">
       <a class="nav-anchor" href="#how">How it works</a>
       <a class="nav-anchor" href="#styles">Styles</a>
-      <a class="nav-anchor" href="#download">Download</a>
+      <a class="nav-anchor" href="#limits">Limitations</a>
       <a href="https://github.com/nayeemdev/bendd">GitHub</a>
       <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
@@ -354,9 +345,9 @@
 <main id="top">
   <section class="hero" style="border-top:none;">
     <div class="wrap">
-      <p class="eyebrow">Free &middot; Open source &middot; Menu bar</p>
-      <h1>Your desktop, on a <em>hinge</em>.</h1>
-      <p class="lede">Bendd reads your Mac's real lid angle sensor and renders your actual desktop tilting shut as you close the lid, fading to black as the screen goes edge-on, inspired by the iPhone Duo fold concept animations.</p>
+      <p class="eyebrow"><span class="bracket">[</span> free &middot; open source &middot; menu bar <span class="bracket">]</span></p>
+      <h1>Your lid deserves a better goodbye.</h1>
+      <p class="lede">Right now, closing a MacBook does nothing visually — the screen just cuts to black. Bendd reads the hinge's real angle sensor and tilts your actual desktop shut as you close it, fading out right as the screen goes edge-on. Not a canned animation. Your real pixels, actually bending.</p>
 
       <div class="cta-row">
         <a class="btn btn-primary js-download" href="https://github.com/nayeemdev/bendd/releases/latest">
@@ -365,7 +356,7 @@
         </a>
         <a class="btn btn-ghost" href="https://github.com/nayeemdev/bendd">View source</a>
       </div>
-      <p class="fine-print">Apple Silicon &middot; macOS 14+ &middot; not notarized yet, see <a href="#download">install notes</a></p>
+      <p class="fine-print">Apple Silicon &middot; macOS 14+ &middot; ad-hoc signed for now, see <a href="#download">why</a></p>
 
       <div class="stage" id="stage">
         <div class="readout">
@@ -379,32 +370,32 @@
           <div class="base"></div>
         </div>
       </div>
-      <p class="scroll-hint">&darr; scroll, the hinge follows you &middot; real captures from the app, not a mockup</p>
+      <p class="scroll-hint">&darr; scroll &mdash; these are real captures from the app at each angle, not a GIF</p>
     </div>
   </section>
 
   <section id="how">
     <div class="wrap">
       <div class="section-head">
-        <p class="eyebrow">How it works</p>
-        <h2>Three things happening sixty times a second.</h2>
-        <p>No canned animation. Bendd is actually looking at the hinge and actually looking at your screen.</p>
+        <p class="eyebrow"><span class="bracket">[</span> how it works <span class="bracket">]</span></p>
+        <h2>Three things, sixty times a second.</h2>
+        <p>No keyframes, no canned easing curve. Bendd is actually watching the hinge and actually watching your screen while it does it.</p>
       </div>
       <div class="steps">
         <div class="step">
           <p class="tag">01 &middot; SENSE</p>
           <h3>Read the hinge</h3>
-          <p>Polls the Mac's lid angle sensor, the same one behind display auto-dim, at up to 60Hz while the lid is moving.</p>
+          <p>Polls the same lid-angle sensor behind auto-dimming, at up to 60Hz while the lid's actually moving, and drops to 10Hz otherwise so your fan stays quiet.</p>
         </div>
         <div class="step">
           <p class="tag">02 &middot; CAPTURE</p>
           <h3>See the desktop</h3>
-          <p>Grabs the live screen via ScreenCaptureKit, zero-copy straight onto the GPU. Nothing is written to disk or sent anywhere.</p>
+          <p>Grabs your live screen via ScreenCaptureKit, straight onto the GPU as a texture, zero copies. Nothing touches disk, nothing leaves the machine.</p>
         </div>
         <div class="step">
           <p class="tag">03 &middot; RENDER</p>
           <h3>Bend it</h3>
-          <p>A Metal shader tilts the captured frame around the hinge, adding blur and shadow that scale with how closed the lid is.</p>
+          <p>A Metal shader tilts that frame around the hinge, with blur and shadow scaled to how closed you are. That's the whole trick.</p>
         </div>
       </div>
     </div>
@@ -413,22 +404,38 @@
   <section id="styles">
     <div class="wrap">
       <div class="section-head">
-        <p class="eyebrow">Styles</p>
-        <h2>Pick how it folds.</h2>
-        <p>Hover a card. Each style is a different balance of blur, shadow, and color.</p>
+        <p class="eyebrow"><span class="bracket">[</span> pick a mood <span class="bracket">]</span></p>
+        <h2>Three ways to fold.</h2>
+        <p>Same math, different finish. Hover a swatch — that's genuinely what each style looks like, not a stand-in.</p>
       </div>
       <div class="styles-grid">
-        <div class="style-card"><div class="swatch silk"></div><h3>Silk</h3><p>Soft focus, light shadow. The fold feels gentle.</p></div>
-        <div class="style-card"><div class="swatch shade"></div><h3>Shade</h3><p>Sharper edges, deep shadow. The fold feels heavy.</p></div>
-        <div class="style-card"><div class="swatch frost"></div><h3>Frost</h3><p>Blur, shadow, and a wash of desaturation together.</p></div>
+        <div class="style-card"><div class="swatch silk"></div><h3>Silk</h3><p>Soft focus, light shadow. The gentle version of goodbye.</p></div>
+        <div class="style-card"><div class="swatch shade"></div><h3>Shade</h3><p>Sharper edges, heavy shadow. For dramatic closings.</p></div>
+        <div class="style-card"><div class="swatch frost"></div><h3>Frost</h3><p>Blur, shadow, and the color quietly drained out.</p></div>
       </div>
+    </div>
+  </section>
+
+  <section id="limits">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow"><span class="bracket">[</span> what it can't do <span class="bracket">]</span></p>
+        <h2>Reasons this might not be for you.</h2>
+        <p>An honest list, because the download page shouldn't be the only place you find these out.</p>
+      </div>
+      <ul class="limits-list">
+        <li><span class="mark">&times;</span><p><strong>Apple Silicon only.</strong> The lid-angle sensor this whole app is built on doesn't exist on Intel Macs.</p></li>
+        <li><span class="mark">&times;</span><p><strong>It's a visual effect, not a privacy screen.</strong> Closing the lid slowly does not hide your desktop from a screen share already in progress.</p></li>
+        <li><span class="mark">&times;</span><p><strong>External monitors are untouched.</strong> Bendd only ever bends the built-in display. Clamshell mode with a second screen just puts the Mac to sleep, same as always.</p></li>
+        <li><span class="mark">&times;</span><p><strong>One machine tested.</strong> The sensor's vendor/product IDs came from other people's reverse-engineering, not Apple's documentation — they should hold across recent MacBook Air/Pro models, but "should" is doing some work in that sentence.</p></li>
+      </ul>
     </div>
   </section>
 
   <section id="requirements">
     <div class="wrap">
       <div class="section-head">
-        <p class="eyebrow">Requirements</p>
+        <p class="eyebrow"><span class="bracket">[</span> requirements <span class="bracket">]</span></p>
         <h2>What it needs to run.</h2>
       </div>
       <div class="spec">
@@ -445,8 +452,8 @@
       </div>
       <div style="height:28px"></div>
       <div class="privacy">
-        <span class="icon">&#9679;</span>
-        <p><strong>Nothing is recorded, saved, or sent anywhere.</strong> The captured desktop exists only as a texture on your own GPU, for one frame, to draw the bend. Bendd has no network code at all.</p>
+        <span class="icon">&#9642;</span>
+        <p><strong>Nothing is recorded, saved, or sent anywhere.</strong> The captured desktop exists only as a texture on your own GPU, for one frame, so the bend has something to draw. Bendd doesn't have network code — there's nowhere for it to send anything even if it wanted to.</p>
       </div>
     </div>
   </section>
@@ -454,9 +461,9 @@
   <section id="download">
     <div class="wrap">
       <div class="download-panel">
-        <p class="eyebrow">Get Bendd</p>
+        <p class="eyebrow"><span class="bracket">[</span> get bendd <span class="bracket">]</span></p>
         <h2>Download the latest build.</h2>
-        <p style="color:var(--text-dim); max-width: 48ch; margin: 0 0 6px;">Ships as a DMG straight from GitHub Releases, free and open source.</p>
+        <p style="color:var(--text-dim); max-width: 56ch; margin: 0 0 6px;">Ships as a DMG straight from GitHub Releases. Free, open source, no account, no email.</p>
         <a class="btn btn-primary js-download" href="https://github.com/nayeemdev/bendd/releases/latest">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Download for Mac
@@ -469,8 +476,8 @@
           <span>macOS 14+</span>
         </div>
         <div class="notarize-note">
-          <p><strong>Not notarized by Apple yet.</strong> The build is ad-hoc signed, so on first launch, double-clicking will say it's damaged. Instead, right-click Bendd.app in Applications and choose <strong>Open</strong>, then confirm in the dialog. Only needed once.</p>
-          <p>Still refuses to open? Run <code>xattr -cr /Applications/Bendd.app</code> in Terminal.</p>
+          <p><strong>Not notarized by Apple yet.</strong> That requires a Developer ID certificate, which Apple currently restricts to the account's Account Holder role — not available on this project's developer enrollment yet. Until it is, the build is ad-hoc signed, so first launch will say it's damaged. Instead, right-click Bendd.app in Applications, choose <strong>Open</strong>, and confirm the dialog. Only needed once.</p>
+          <p>Still refuses to open? Run <code>xattr -cr /Applications/Bendd.app</code> in Terminal. That's the whole workaround.</p>
         </div>
       </div>
     </div>
@@ -479,7 +486,10 @@
 
 <footer>
   <div class="wrap">
-    <a class="wordmark" href="#top"><img src="assets/logo.png" alt="" width="26" height="26"><span>Bend<em>d</em></span></a>
+    <div class="foot-left">
+      <a class="wordmark" href="#top"><img src="assets/logo.png" alt="" width="20" height="20"><span>Bend<em>d</em></span></a>
+      <p class="foot-note">Built by one person who got mildly obsessed with what a hinge sensor could do. No roadmap, no telemetry dashboard, no "sync to cloud."</p>
+    </div>
     <div class="foot-links">
       <a href="https://github.com/nayeemdev/bendd">Source</a>
       <a href="https://github.com/nayeemdev/bendd/blob/main/LICENSE">MIT License</a>
@@ -578,8 +588,8 @@
   "name": "Bendd",
   "operatingSystem": "macOS",
   "applicationCategory": "UtilitiesApplication",
-  "description": "A free, open source Mac menu bar app that makes your desktop visually bend as you close the lid, inspired by the iPhone Duo fold concept.",
-  "url": "https://blendd.nayeem.me/",
+  "description": "A free, open source Mac menu bar app that bends your real desktop shut as the lid closes, using the hinge's actual angle sensor.",
+  "url": "https://bendd.nayeem.me/",
   "downloadUrl": "https://github.com/nayeemdev/bendd/releases/latest",
   "license": "https://github.com/nayeemdev/bendd/blob/main/LICENSE",
   "offers": {
