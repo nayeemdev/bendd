@@ -10,7 +10,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-APP_VERSION="0.2.0"
+APP_VERSION="0.3.0"
 BUILD_NUMBER="1"
 
 DIST_DIR="dist"

@@ -27,7 +27,15 @@ float3 desaturate(float3 color, float amount) {
 struct FragmentUniforms {
     float shadeAmount;
     float desaturation;
+    float textureWidth;
+    float textureHeight;
+    float cornerRadius;
 };
+
+float roundedBoxDistance(float2 point, float2 halfSize, float radius) {
+    float2 q = abs(point) - halfSize + radius;
+    return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - radius;
+}
 
 fragment float4 bend_fragment(VertexOut in [[stage_in]],
                                texture2d<float> sharpTexture [[texture(0)]],
@@ -36,15 +44,27 @@ fragment float4 bend_fragment(VertexOut in [[stage_in]],
                                constant FragmentUniforms &uniforms [[buffer(0)]]) {
     float hingeToFar = (in.objectY + 1.0) * 0.5;
 
+    float2 textureSize = float2(uniforms.textureWidth, uniforms.textureHeight);
+    float2 pixelPos = in.texCoord * textureSize;
+    float2 halfSize = textureSize * 0.5;
+    float dist = roundedBoxDistance(pixelPos - halfSize, halfSize, uniforms.cornerRadius);
+
+    float edgeFadeWidth = 20.0;
+    float edgeFade = smoothstep(-edgeFadeWidth, 0.0, dist);
+    float fadeAmount = max(hingeToFar, edgeFade);
+
     float4 sharp = sharpTexture.sample(textureSampler, in.texCoord);
     float4 blurred = blurredTexture.sample(textureSampler, in.texCoord);
-    float4 color = mix(sharp, blurred, saturate(hingeToFar));
+    float4 color = mix(sharp, blurred, saturate(fadeAmount));
 
-    float3 desaturated = desaturate(color.rgb, uniforms.desaturation * hingeToFar);
-    float localShade = saturate(uniforms.shadeAmount * mix(0.15, 1.0, hingeToFar));
+    float3 desaturated = desaturate(color.rgb, uniforms.desaturation * fadeAmount);
+    float localShade = saturate(uniforms.shadeAmount * mix(0.15, 1.0, fadeAmount));
     float3 shaded = desaturated * (1.0 - localShade);
 
-    return float4(shaded, color.a);
+    float insideMask = 1.0 - smoothstep(-6.0, 6.0, dist);
+    float3 finalColor = mix(float3(0.0), shaded, insideMask);
+
+    return float4(finalColor, color.a);
 }
 
 struct BackgroundUniforms {

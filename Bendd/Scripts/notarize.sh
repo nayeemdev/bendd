@@ -40,7 +40,7 @@ xcrun stapler staple "$APP_BUNDLE"
 echo "Rebuilding DMG around the stapled app..."
 ./Scripts/make-dmg.sh
 
-APP_VERSION="0.2.0"
+APP_VERSION="0.3.0"
 DMG_PATH="$DIST_DIR/Bendd-$APP_VERSION.dmg"
 
 echo "Submitting DMG to Apple notary service..."

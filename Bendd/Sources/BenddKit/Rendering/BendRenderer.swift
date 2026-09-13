@@ -23,6 +23,9 @@ public enum BendRendererError: Error, CustomStringConvertible {
 private struct FragmentUniforms {
     var shadeAmount: Float
     var desaturation: Float
+    var textureWidth: Float
+    var textureHeight: Float
+    var cornerRadius: Float
 }
 
 private struct BackgroundUniforms {
@@ -33,6 +36,7 @@ public final class BendRenderer: NSObject, MTKViewDelegate {
     private static let maxShadeAmount: Float = 1.4
     private static let maxForegroundBlurSigma: Float = 14
     private static let maxBackgroundAlpha: Float = 1.0
+    private static let cornerRadiusPixels: Float = 32
 
     private let device: MTLDevice
     private let commandQueue: MTLCommandQueue
@@ -142,7 +146,10 @@ public final class BendRenderer: NSObject, MTKViewDelegate {
         var mvp = BendTransform.matrix(angleDegrees: tilt)
         var foregroundUniforms = FragmentUniforms(
             shadeAmount: bendFraction * Self.maxShadeAmount * styleParameters.shadowScale * Float(configuration.shadowStrength),
-            desaturation: bendFraction * styleParameters.desaturation
+            desaturation: bendFraction * styleParameters.desaturation,
+            textureWidth: Float(sourceTexture.width),
+            textureHeight: Float(sourceTexture.height),
+            cornerRadius: Self.cornerRadiusPixels
         )
         encoder.setRenderPipelineState(foregroundPipelineState)
         encoder.setVertexBytes(&mvp, length: MemoryLayout<float4x4>.size, index: 2)
